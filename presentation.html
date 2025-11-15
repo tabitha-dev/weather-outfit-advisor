@@ -1,0 +1,3726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Weather Outfit Advisor: Capstone Project Report</title>
+    <meta name="description" content="A Multi-Agent System leveraging ADK, A2A Protocol, and Vertex AI Agent Engine for intelligent weather-based outfit recommendations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .page {
+                page-break-after: always;
+                box-shadow: none;
+                margin: 0;
+            }
+            
+            .page:last-child {
+                page-break-after: auto;
+            }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f0f2f5;
+            color: #3c4043;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-weight: 300;
+        }
+
+        .document-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 1280px;
+            min-height: 900px;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 60px;
+            padding-bottom: 100px;
+            margin-bottom: 30px;
+            position: relative;
+            page-break-after: always;
+            page-break-inside: avoid;
+        }
+
+        .page:last-child {
+            margin-bottom: 20px;
+        }
+
+        .page-content {
+            width: 100%;
+            min-height: 750px;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            color: #3c4043;
+            font-weight: 500;
+            margin: 0 0 20px 0;
+        }
+
+        h1 {
+            font-size: 64px;
+            font-weight: 700;
+            color: #4285F4;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 48px;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            font-size: 28px;
+            font-weight: 500;
+            color: #1967d2;
+        }
+
+        p, li {
+            color: #3c4043;
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Page Footer */
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            padding: 0 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        footer p {
+            font-size: 14px;
+            color: #5f6368;
+            font-weight: 400;
+        }
+
+        .logo-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #4285F4 25%, #EA4335 25%, #EA4335 50%, #FBBC05 50%, #FBBC05 75%, #34A853 75%);
+        }
+
+        .title-page {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 750px;
+        }
+
+        .title-page h1 {
+            font-size: 80px;
+            font-weight: 700;
+            color: #4285F4;
+        }
+
+        .title-page .subtitle {
+            font-size: 28px;
+            color: #5f6368;
+            margin: 20px 0;
+            font-weight: 300;
+        }
+
+        .title-page .purpose {
+            font-size: 22px;
+            color: #4285F4;
+            font-weight: 500;
+            margin-top: 50px;
+        }
+
+        .title-page .author-info {
+            margin-top: 3rem;
+            color: #5f6368;
+            font-size: 20px;
+        }
+
+        .title-page .author-info p {
+            margin-bottom: 10px;
+        }
+
+        .title-page .links {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: #5f6368;
+        }
+
+        .title-page .link-text {
+            color: #3c4043;
+            font-weight: 500;
+        }
+
+        .section-title-page {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 750px;
+        }
+
+        .section-title-page .part-number {
+            font-size: 28px;
+            color: #5f6368;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .section-title-page h2 {
+            font-size: 80px;
+            color: #4285F4;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .section-title-page .subtitle {
+            font-size: 24px;
+            color: #5f6368;
+            margin-top: 20px;
+            font-weight: 300;
+        }
+
+        .content-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .content-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            font-size: 18px;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .content-list li::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #4285F4;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 8px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        ul li::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background-color: #4285F4;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 8px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .table-container {
+            margin-top: 1.5rem;
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #DADCE0;
+            vertical-align: top;
+        }
+
+        th {
+            background: #e8f0fe;
+            font-weight: 500;
+            color: #1967d2;
+            font-size: 16px;
+        }
+
+        td {
+            color: #3c4043;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .code-block pre,
+        .code-snippet {
+            background: #F8F9FA;
+            border: 1px solid #DADCE0;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow: visible;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #202124;
+        }
+        
+        @media print {
+            .code-block pre,
+            .code-snippet {
+                overflow: visible;
+                max-height: none;
+                page-break-inside: avoid;
+            }
+        }
+
+        .code-snippet .keyword {
+            color: #1967d2;
+        }
+
+        .code-snippet .string {
+            color: #c53929;
+        }
+
+        .code-snippet .comment {
+            color: #1e8e3e;
+        }
+
+        .highlight {
+            color: #4285F4;
+            font-weight: 600;
+        }
+
+        .box,
+        .info-box {
+            background: #e8f0fe;
+            border-left: 5px solid #4285F4;
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .box p,
+        .info-box p {
+            color: #1967d2;
+            font-weight: 400;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .box strong,
+        .info-box strong {
+            font-weight: 700;
+            color: #1967d2;
+        }
+
+        .success-box {
+            background: #e6f4ea;
+            border-left-color: #34A853;
+        }
+
+        .success-box p {
+            color: #1e8e3e;
+        }
+
+        .warning-box,
+        .error-box {
+            background: #fce8e6;
+            border-left-color: #EA4335;
+        }
+
+        .warning-box p,
+        .error-box p {
+            color: #c5221f;
+        }
+
+        @media (max-width: 768px) {
+            .two-column, .three-column {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .page {
+                padding: 2rem 1.5rem;
+                padding-bottom: 100px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 15mm 20mm;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            html, body {
+                margin: 0;
+                padding: 0;
+                background: white;
+                width: 100%;
+                height: 100%;
+            }
+            
+            .document-container {
+                padding: 0;
+                margin: 0;
+                max-width: none;
+            }
+            
+            .page {
+                page-break-before: always;
+                page-break-after: always;
+                page-break-inside: avoid;
+                margin: 0;
+                padding: 0;
+                padding-top: 20px;
+                padding-bottom: 70px;
+                box-shadow: none;
+                border-radius: 0;
+                background: white;
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .page:first-child {
+                page-break-before: auto;
+            }
+            
+            .page:last-child {
+                page-break-after: auto;
+            }
+            
+            .page-content {
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+            
+            footer {
+                position: fixed;
+                bottom: 15mm;
+                left: 20mm;
+                right: 20mm;
+                width: auto;
+                padding: 0;
+                page-break-inside: avoid;
+                background: transparent;
+            }
+            
+            footer p {
+                margin: 0 0 8px 0;
+                padding: 0;
+                font-size: 10pt;
+                background: white;
+            }
+            
+            .logo-bar {
+                height: 4px;
+                width: 100%;
+                page-break-inside: avoid;
+                background: linear-gradient(90deg, #4285F4 25%, #EA4335 25%, #EA4335 50%, #FBBC05 50%, #FBBC05 75%, #34A853 75%);
+            }
+            
+            h1 {
+                font-size: 36pt;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            h2 {
+                font-size: 28pt;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            h3 {
+                font-size: 20pt;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            h4, h5, h6 {
+                font-size: 14pt;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            p, li {
+                font-size: 11pt;
+                line-height: 1.5;
+            }
+            
+            table {
+                page-break-inside: avoid;
+                font-size: 10pt;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+            
+            .code-block,
+            .box,
+            .info-box,
+            .success-box,
+            .warning-box,
+            .error-box {
+                page-break-inside: avoid;
+                font-size: 10pt;
+                padding: 10px 15px;
+                margin: 10px 0;
+            }
+            
+            .two-column,
+            .three-column {
+                page-break-inside: avoid;
+            }
+            
+            pre, code {
+                font-size: 9pt;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            
+            /* Preserve backgrounds and colors */
+            .code-block pre,
+            .code-snippet {
+                background: #F8F9FA !important;
+                border: 1px solid #DADCE0 !important;
+            }
+            
+            table thead {
+                background: #e8f0fe !important;
+            }
+            
+            .box,
+            .info-box {
+                background: #e8f0fe !important;
+                border-left: 4px solid #4285F4 !important;
+            }
+            
+            .success-box {
+                background: #e6f4ea !important;
+                border-left: 4px solid #34A853 !important;
+            }
+            
+            .warning-box,
+            .error-box {
+                background: #fce8e6 !important;
+                border-left: 4px solid #EA4335 !important;
+            }
+            
+            .logo-bar {
+                background: linear-gradient(90deg, #4285F4 25%, #EA4335 25%, #EA4335 50%, #FBBC05 50%, #FBBC05 75%, #34A853 75%) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="document-container">
+        <!-- Page 1: Title -->
+        <div class="page">
+            <div class="page-content title-page">
+                <h1>The Weather Outfit Advisor</h1>
+                <p class="subtitle">A Multi-Agent System Leveraging ADK, A2A Protocol, and Vertex AI Agent Engine</p>
+                <p class="purpose">Capstone Project: Prototype to Production</p>
+                <div class="author-info">
+                    <p>Created by: Tabitha Khadse</p>
+                    <p>GitHub: https://github.com/tabitha-dev</p>
+                    <p>LinkedIn: https://www.linkedin.com/in/tabitha-dev/</p>
+            
+                </div>
+            
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 1 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Page 2: Table of Contents -->
+        <div class="page">
+            <div class="page-content">
+                <h2 style="color: #4285F4; margin-bottom: 40px;">Table of Contents</h2>
+                <div style="column-count: 2; column-gap: 40px; font-size: 16px; line-height: 1.8;">
+                    <p style="font-weight: 500; margin-bottom: 10px;">Executive Summary ........................... 3</p>
+                    <p style="font-weight: 500; margin-bottom: 10px;">Project Overview .............................. 4</p>
+                    <p style="font-weight: 500; margin-bottom: 10px;">Development Journey ........................ 5</p>
+                    
+                    <p style="font-weight: 700; color: #EA4335; margin-top: 25px; margin-bottom: 10px;">Day 1: Introduction to Agents</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Agent Fundamentals ........................ 6</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">LLM Architecture ............................ 7</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">System Prompt ............................... 8</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Design Patterns ............................. 9</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Multi-Agent Systems ....................... 10</p>
+                    
+                    <p style="font-weight: 700; color: #FBBC05; margin-top: 25px; margin-bottom: 10px;">Day 2: Agent Tools & Interoperability</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Tool Integration ............................. 11</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Model Context Protocol .................... 12</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Weather Tools Implementation ........... 13</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">API Integration .............................. 14</p>
+                    
+                    <p style="font-weight: 700; color: #34A853; margin-top: 25px; margin-bottom: 10px;">Day 3: Context Engineering</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Session Management ....................... 15</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Memory Systems ............................ 16</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">RAG Implementation ........................ 17</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Context Strategies .......................... 18</p>
+                    
+                    <p style="font-weight: 700; color: #4285F4; margin-top: 25px; margin-bottom: 10px;">Day 4: Agent Quality</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Quality Framework .......................... 19</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Safety & Security ........................... 20</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Monitoring & Observability ................ 21</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Evaluation Metrics .......................... 22</p>
+                    
+                    <p style="font-weight: 700; color: #EA4335; margin-top: 25px; margin-bottom: 10px;">Day 5: Prototype to Production</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">A2A Protocol ................................. 23</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Multi-Agent Architecture ................... 24</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Agent Engine Deployment ................. 25</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Production Considerations ................. 26</p>
+                    
+                    <p style="font-weight: 700; color: #FBBC05; margin-top: 25px; margin-bottom: 10px;">Technical Implementation</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">System Architecture ........................ 27</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Agent Specifications ....................... 28</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Code Examples .............................. 29</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Best Practices .............................. 30</p>
+                    
+                    <p style="font-weight: 700; color: #34A853; margin-top: 25px; margin-bottom: 10px;">Results & Conclusions</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Key Achievements .......................... 72</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">References ................................... 73</p>
+                    <p style="margin-left: 15px; margin-bottom: 8px;">Thank You .................................... 74</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 2 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Page 3: Executive Summary -->
+        <div class="page">
+            <div class="page-content">
+                <h2>Executive Summary: <span class="highlight">Bridging the Last Mile</span></h2>
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: #EA4335; margin-bottom: 1rem;">The Challenge (Day 1)</h3>
+                        <p style="font-size: 18px; line-height: 1.6;">Building a single, monolithic agent is inefficient for combining real-time data, complex logic, and personalization. The system becomes hard to maintain, scale, and test.</p>
+                    </div>
+                    <div>
+                        <h3 style="color: #34A853; margin-bottom: 1rem;">The Solution (Day 5 - A2A)</h3>
+                        <p style="font-size: 18px; line-height: 1.6;">A microservices architecture where specialized agents collaborate via the <span class="highlight">Agent-to-Agent (A2A) Protocol</span>. This allows for decoupling, independent scaling, and clear separation of concerns.</p>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px; font-size: 28px; color: #1967d2;">Key Technical Achievements</h3>
+                <div class="table-container" style="margin-top: 20px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pillar</th>
+                                <th>Achievement</th>
+                                <th>Course Day</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Architecture</strong></td>
+                                <td>Decoupled 5 agents for independent scaling via A2A</td>
+                                <td>Day 5</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Agent Quality</strong></td>
+                                <td>Integrated dedicated Safety Agent and Monitoring Alerts</td>
+                                <td>Day 4</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Context</strong></td>
+                                <td>Implemented persistent Memory for user personalization</td>
+                                <td>Day 3</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Performance</strong></td>
+                                <td>Achieved optimization via Smart Caching and Observability</td>
+                                <td>Day 2 & 4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 3 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Page 3: Part I - Architecture -->
+        <div class="page">
+            <div class="page-content section-title-page">
+                <p class="part-number">Part I</p>
+                <h2>Agent Fundamentals<br>& Architecture</h2>
+                <p class="subtitle">(Day 1)</p>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 4 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 5: The 5-Agent Architecture -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>The 5-Agent Orchestration Map</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Agent</th>
+                                <th>Model</th>
+                                <th>Core Responsibility</th>
+                                <th>Communication</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Coach Agent</strong></td>
+                                <td>Gemini 2.0 Flash Exp</td>
+                                <td>User I/O, Orchestration, Memory, Final Response</td>
+                                <td>User / A2A Client</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Weather Agent</strong></td>
+                                <td>Gemini 2.0 Flash Exp</td>
+                                <td>Fetches & Caches Weather Data (structured WeatherData)</td>
+                                <td>A2A Service</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stylist Agent</strong></td>
+                                <td>Gemini 2.0 Flash Exp</td>
+                                <td>Generates OutfitPlan based on logic & preferences</td>
+                                <td>A2A Service</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Activity Agent</strong></td>
+                                <td>Gemini 2.0 Flash Exp</td>
+                                <td>Classifies user intent (work, sports, formal, casual)</td>
+                                <td>A2A Service</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Safety Agent</strong></td>
+                                <td>Gemini 2.0 Flash Exp</td>
+                                <td>Monitors extreme cold/heat/wind/storm risks</td>
+                                <td>A2A Service</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Key Concept (Day 1):</strong> Level 3 Collaborative Multi-Agent System - "Team of Specialists"</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 5 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 6: Coach Agent Workflow -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Coach Agent Workflow: Query to Answer</h2>
+                <ul class="content-list">
+                    <li><strong>1. Context:</strong> Coach loads User Preferences (Persona, Comfort Profile) via memory tools</li>
+                    <li><strong>2. Intent:</strong> Coach calls Activity Agent (A2A) to classify the user's plan</li>
+                    <li><strong>3. Data:</strong> Coach calls Weather Agent (A2A) to get forecast (using caching)</li>
+                    <li><strong>4. Logic:</strong> Coach calls Stylist Agent (A2A) with all context to generate outfit plan</li>
+                    <li><strong>5. Safety Check:</strong> Coach calls Safety Agent (A2A) to check for risks</li>
+                    <li><strong>6. Response:</strong> Coach merges outfit, safety note, and style into final conversational response</li>
+                </ul>
+                <div class="box" style="margin-top: 2rem;">
+                    <p><strong>Agentic Problem-Solving Process:</strong> Think → Act → Observe → Iterate (managed by Coach orchestration layer)</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 6 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 7: Coach Agent Deep Dive -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Agent Deep Dive: Coach Agent (Orchestrator)</h2>
+                <p><strong>Role:</strong> The Central Nervous System - Main user interface, coordination, personalization</p>
+                <div class="two-column" style="margin-top: 1.5rem;">
+                    <div>
+                        <h3>Model & Tools</h3>
+                        <ul class="content-list">
+                            <li>Model: <code>gemini-2.0-flash-exp</code></li>
+                            <li><code>get_user_preferences</code></li>
+                            <li><code>update_user_preferences</code></li>
+                            <li><code>get_weather_smart</code></li>
+                            <li><code>classify_activity</code></li>
+                            <li><code>plan_outfit</code></li>
+                            <li><code>check_safety</code></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Core Instruction</h3>
+                        <p style="font-size: 0.95rem; line-height: 1.6;">You are the Weather Outfit Coach - the main AI assistant. Help users decide what to wear, provide personalized recommendations, and consider their activities with safety warnings.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 7 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 8: Security - Agent Identity -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Architecture Security: Agent Identity</h2>
+                <h3 style="color: #dc2626;">The Risk: Confused Deputy Problem</h3>
+                <p>In monolithic systems, a privileged agent can be tricked into performing unauthorized actions. This risk is amplified in agents because <strong>tool execution is a trusted action</strong>.</p>
+                
+                <h3 style="color: #059669; margin-top: 1.5rem;">Mitigation: Least-Privilege A2A</h3>
+                <p>The A2A architecture assigns restricted <strong>Agent Identities</strong> to every service, following the <strong>Principle of Least Privilege</strong>.</p>
+                
+                <div class="table-container" style="margin-top: 1.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Agent</th>
+                                <th>Permissions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Coach Agent</td>
+                                <td>Only orchestration and memory permissions</td>
+                            </tr>
+                            <tr>
+                                <td>Weather Agent</td>
+                                <td>Only external API key access (least privilege)</td>
+                            </tr>
+                            <tr>
+                                <td>Stylist Agent</td>
+                                <td>Only local outfit logic access</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 8 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 9: Weather Agent -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Agent Deep Dive: Weather Agent (Data Specialist)</h2>
+                <p><strong>Role:</strong> Data Provider & Caching - Isolates external API calls and manages performance</p>
+                
+                <div class="two-column" style="margin-top: 1.5rem;">
+                    <div>
+                        <h3>Tools</h3>
+                        <ul class="content-list">
+                            <li><code>get_current_weather</code></li>
+                            <li><code>get_hourly_forecast</code></li>
+                            <li><code>get_weather_smart</code></li>
+                        </ul>
+                        
+                        <h3 style="margin-top: 1.5rem;">Rules</h3>
+                        <ul class="content-list">
+                            <li>Always call weather tools before providing info</li>
+                            <li>Never guess or use training data</li>
+                            <li>Return clean, structured forecast data</li>
+                            <li>Use <code>get_weather_smart</code> for efficiency (caching)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="code-snippet">
+<span class="keyword">from</span> google.adk.agents <span class="keyword">import</span> Agent
+<span class="keyword">from</span> ..tools.weather_tools <span class="keyword">import</span> (
+    get_current_weather,
+    get_hourly_forecast,
+    get_weather_smart
+)
+
+weather_agent = Agent(
+    name=<span class="string">"weather_agent"</span>,
+    model=<span class="string">"gemini-2.0-flash-exp"</span>,
+    instruction=<span class="string">"""You are a weather specialist..."""</span>,
+    tools=[
+        get_current_weather,
+        get_hourly_forecast,
+        get_weather_smart
+    ]
+)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 9 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 10: Stylist & Activity Agents -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Agent Deep Dive: Stylist & Activity Agents</h2>
+                <div class="two-column">
+                    <div>
+                        <h3>Stylist Agent (Logic/Rules)</h3>
+                        <p><strong>Role:</strong> Recommendation Engine</p>
+                        <ul class="content-list">
+                            <li>Takes structured weather data + user preferences</li>
+                            <li>Uses <code>plan_outfit</code> tool</li>
+                            <li>Never calls weather APIs directly</li>
+                            <li>Style approaches by persona:
+                                <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                                    <li style="list-style: disc;">Practical: Function, comfort</li>
+                                    <li style="list-style: disc;">Fashion: Style tips, trends</li>
+                                    <li style="list-style: disc;">Kid-friendly: Fun language</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Activity Agent (Context)</h3>
+                        <p><strong>Role:</strong> Classifying User Intent</p>
+                        <ul class="content-list">
+                            <li>Interprets activity from user message</li>
+                            <li>Classifies: work, casual, sports, formal</li>
+                            <li>Determines formality & movement intensity</li>
+                            <li>Example classifications:
+                                <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                                    <li style="list-style: disc;">Work: business_casual, low movement</li>
+                                    <li style="list-style: disc;">Sports: casual, high movement</li>
+                                    <li style="list-style: disc;">Formal: formal, low movement</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 10 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 11: Safety Agent -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Agent Deep Dive: Safety Agent (Guardrails)</h2>
+                <p><strong>Role:</strong> Responsible AI Implementation - Ensures safety guidelines</p>
+                
+                <h3>Safety Thresholds</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condition</th>
+                                <th>Threshold</th>
+                                <th>Warning Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Extreme Cold</td>
+                                <td>Below 20°F</td>
+                                <td>Requires warm layers, protection</td>
+                            </tr>
+                            <tr>
+                                <td>Freezing</td>
+                                <td>32°F and below</td>
+                                <td>Ice warning, careful movement</td>
+                            </tr>
+                            <tr>
+                                <td>Extreme Heat</td>
+                                <td>Above 95°F</td>
+                                <td>Stay hydrated, seek shade</td>
+                            </tr>
+                            <tr>
+                                <td>Strong Winds</td>
+                                <td>Above 25 mph</td>
+                                <td>Avoid large umbrellas</td>
+                            </tr>
+                            <tr>
+                                <td>Heavy Rain/Storms</td>
+                                <td>Above 70% chance</td>
+                                <td>Suggests seeking shelter</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box success-box" style="margin-top: 1.5rem;">
+                    <p><strong>Key Part of Day 4 Agent Quality Principles:</strong> Safety as a deterministic, programmatic guardrail</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 11 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Part II - Tooling -->
+        <div class="page" >
+            <div class="page-content section-title-page">
+                <p class="part-number">Part II</p>
+                <h2>Advanced Tooling<br>& Context Engineering</h2>
+                <p class="subtitle">(Day 2 & 3)</p>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 12 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 13: Tools & Optimization -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Tools as Hands: Custom Functions</h2>
+                <p>Tools embody discrete, testable business logic and integrate core optimizations like caching.</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Functionality & Benefit</th>
+                                <th>Day 2 Principle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>get_weather_smart</code></td>
+                                <td>Checks in-memory cache (15-min TTL) before calling external API</td>
+                                <td>Cost & Latency Reduction</td>
+                            </tr>
+                            <tr>
+                                <td><code>plan_outfit</code></td>
+                                <td>Implements complex layering logic based on Persona and Activity</td>
+                                <td>Tool-Tool Composition</td>
+                            </tr>
+                            <tr>
+                                <td><code>check_safety</code></td>
+                                <td>Flags specific risks based on hard thresholds</td>
+                                <td>Safety as a Tool (Enforcement)</td>
+                            </tr>
+                            <tr>
+                                <td><code>classify_activity</code></td>
+                                <td>Translates free-form text into structured constraints</td>
+                                <td>Structured Output Design</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 13 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 14: Smart Caching -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Feature Deep Dive: Smart Caching</h2>
+                <h3>Mechanism</h3>
+                <p>The <code>get_weather_smart</code> tool uses an in-memory dictionary cache keyed by <code>city</code> and <code>time_window</code>. Data is only considered valid for <strong>15 minutes (900 seconds)</strong>.</p>
+                
+                <h3 style="margin-top: 1.5rem;">Impact</h3>
+                <ul class="content-list">
+                    <li><strong>MLOps Focus:</strong> Demonstrates efficiency and cost control</li>
+                    <li><strong>Cost Reduction:</strong> Weather Agent avoids unnecessary API calls (~70% reduction)</li>
+                    <li><strong>Latency Improvement:</strong> Dramatically improves response time for common queries</li>
+                    <li><strong>Code Principle:</strong> Logic encapsulated in tool layer (<code>weather_tools.py</code>), transparent to LLM</li>
+                </ul>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Production Evidence:</strong> Trace logs show Weather Agent calls completing in 125ms (cache hit) vs 800ms+ (cache miss)</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 14 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 15: Tool Contract -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Tool Contract: Predictable Data Flow</h2>
+                <h3 style="color: #dc2626;">The Challenge</h3>
+                <p>The success of the <strong>Stylist Agent</strong> is entirely dependent on receiving clean, unambiguous <strong>Structured Content</strong> from the <strong>Weather Agent</strong>. If data is unreliable or malformed, the Stylist will hallucinate or fail.</p>
+                
+                <h3 style="color: #059669; margin-top: 1.5rem;">Solution: Concise and Structured Output</h3>
+                <p>Enforce reliability by making the Weather Agent deterministic with strict schema adherence.</p>
+                
+                <div class="two-column" style="margin-top: 1.5rem;">
+                    <div>
+                        <h3>Weather Agent</h3>
+                        <ul class="content-list">
+                            <li>Constrained to return only required fields</li>
+                            <li>Fields: <code>temperature</code>, <code>rain_chance</code>, <code>wind_speed</code></li>
+                            <li>Deterministic output schema</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Stylist Agent</h3>
+                        <ul class="content-list">
+                            <li>Non-generative (consumes clean data)</li>
+                            <li>Relies on predictable structure</li>
+                            <li>No hallucination risk</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Design Principle:</strong> "Design for Concise Output" (Day 2: Page 19)</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 15 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 16: Activity Classification -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Feature Deep Dive: Activity Classification</h2>
+                <p>The Activity Agent translates free-form text into structured constraints used by the Stylist Agent's rule engine.</p>
+                
+                <h3 style="margin-top: 1.5rem;">Example: "I'm going hiking this afternoon."</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Constraint</th>
+                                <th>Value</th>
+                                <th>Usage by Stylist Agent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>category</code></td>
+                                <td><code>sports</code></td>
+                                <td>Triggers athletic apparel suggestions</td>
+                            </tr>
+                            <tr>
+                                <td><code>formality_level</code></td>
+                                <td><code>casual</code></td>
+                                <td>Avoids suggesting formal wear/shoes</td>
+                            </tr>
+                            <tr>
+                                <td><code>movement_level</code></td>
+                                <td><code>high</code></td>
+                                <td>Prioritizes flexible, moisture-wicking layers</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 16 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 17: Context Engineering -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Context Engineering: Sessions & Memory</h2>
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: #1e40af;">1. Session Management</h3>
+                        <p><strong>Short-Term Workbench</strong></p>
+                        <ul class="content-list">
+                            <li>Managed by Agent Engine Sessions</li>
+                            <li>Stores transient conversation data</li>
+                            <li>Enables follow-up questions</li>
+                        </ul>
+                        <p style="margin-top: 1rem; font-size: 0.9rem;"><strong>Example Data:</strong></p>
+                        <ul class="content-list">
+                            <li>City: "Redmond"</li>
+                            <li>Time Window: "this evening"</li>
+                            <li>Last Forecast: { temp, conditions }</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: #059669;">2. Long-Term Memory</h3>
+                        <p><strong>Permanent Preferences</strong></p>
+                        <ul class="content-list">
+                            <li>Handled by <code>UserMemory</code> class</li>
+                            <li>Abstracts storage layer</li>
+                            <li>Persists across all conversations</li>
+                        </ul>
+                        <p style="margin-top: 1rem; font-size: 0.9rem;"><strong>Example Data:</strong></p>
+                        <ul class="content-list">
+                            <li>Persona: <code>practical</code></li>
+                            <li>Comfort Profile: <code>runs_cold</code></li>
+                            <li>Default City: <code>Seattle</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 17 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 18: Persona Personalization -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Feature Deep Dive: Persona Personalization</h2>
+                <p>The Coach Agent reads the <code>Persona</code> from memory and injects persona-specific instructions into the Stylist Agent's prompt or final output formatting.</p>
+                
+                <div class="table-container" style="margin-top: 1.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Persona</th>
+                                <th>Coach Instruction</th>
+                                <th>Stylist Instruction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Practical</strong></td>
+                                <td>Focus on function and essentials</td>
+                                <td>Focus on function, comfort, and simplicity</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fashion</strong></td>
+                                <td>Add style tips and coordination advice</td>
+                                <td>Add style tips, color coordination, and trends</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kid-Friendly</strong></td>
+                                <td>Use fun, simple language</td>
+                                <td>Use fun language and prioritize safety</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Implementation:</strong> UserMemory class abstracts storage (in-memory dictionary) with clean API for Coach Agent tools</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 18 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Part III - Observability -->
+        <div class="page" >
+            <div class="page-content section-title-page">
+                <p class="part-number">Part III</p>
+                <h2>Agent Quality<br>& Observability</h2>
+                <p class="subtitle">(Day 4)</p>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 19 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 20: Three Pillars -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>AgentOps: The Three Pillars of Observability</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pillar</th>
+                                <th>Description</th>
+                                <th>Implementation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Logs (The Diary)</strong></td>
+                                <td>Structured records of every tool call, decision, error</td>
+                                <td><code>loging_confi.py</code> → Google Cloud Logging</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Metrics (Health Report)</strong></td>
+                                <td>Quantifiable data on latency, error rates, throughput</td>
+                                <td><code>metrics.py</code> → Google Cloud Monitoring</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Traces (The Narrative)</strong></td>
+                                <td>End-to-end flow of single request across all 5 A2A agents</td>
+                                <td>OpenTelemetry → Google Cloud Trace</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. Alerts (The Act Phase)</strong></td>
+                                <td>Programmatic alerts on metric thresholds</td>
+                                <td><code>alert.py</code> → Google Cloud Monitoring</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 20 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 21: Structured Logging -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Observability Pillar 1: Structured Logging</h2>
+                <h3>Mechanism</h3>
+                <p>Custom logging configuration (<code>loging_confi.py</code>) outputs structured JSON logs, making them easily searchable in Google Cloud Logging.</p>
+                
+                <div class="code-snippet" style="margin-top: 1.5rem;">
+<span class="keyword">def</span> setup_logging(service_name: str, level: str = <span class="string">"INFO"</span>):
+    logger = logging.getLogger(service_name)
+    logger.setLevel(getattr(logging, level.upper()))
+    
+    <span class="comment"># Structured JSON format</span>
+    formatter = logging.Formatter(
+        <span class="string">'{"time": "%(asctime)s", "level": "%(levelname)s", '</span>
+        <span class="string">'"service": "' + service_name + '", "message": "%(message)s"}'</span>
+    )
+    
+    <span class="comment"># Cloud Logging integration</span>
+    <span class="keyword">if</span> CLOUD_LOGGING_AVAILABLE:
+        client = cloud_logging.Client(project=project_id)
+        cloud_handler = client.get_default_handler()
+        logger.addHandler(cloud_handler)
+    
+    <span class="keyword">return</span> logger
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 21 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 22: Metrics Implementation -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Observability: Metrics Implementation</h2>
+                <p>The <code>MetricsCollector</code> instruments key components using Python decorators for automatic measurement.</p>
+                
+                <h3 style="margin-top: 1.5rem;">Metrics Tracked</h3>
+                <ul class="content-list">
+                    <li><code>agent_call_latency</code> - Duration of agent executions</li>
+                    <li><code>agent_calls</code> (by status: success/error)</li>
+                    <li><code>tool_execution_latency</code> - Duration of tool calls</li>
+                    <li><code>tool_calls</code> (by status: success/error)</li>
+                </ul>
+
+                <div class="code-snippet" style="margin-top: 1.5rem;">
+<span class="keyword">@contextmanager</span>
+<span class="keyword">def</span> measure_time(metric_name: str, labels: Dict):
+    start_time = time.time()
+    <span class="keyword">try</span>:
+        <span class="keyword">yield</span>
+    <span class="keyword">finally</span>:
+        duration_ms = (time.time() - start_time) * <span class="string">1000</span>
+        record_latency(metric_name, duration_ms, labels)
+
+<span class="comment"># Usage with decorator</span>
+<span class="keyword">@track_tool_execution</span>(<span class="string">"get_weather_smart"</span>)
+<span class="keyword">def</span> get_weather_smart(city: str):
+    <span class="comment"># Tool implementation...</span>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 22 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 23: Alerts Implementation -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Observability: Alerts (The "Act" Phase)</h2>
+                <p>Alerts provide automated reflexes, maintaining stability in real-time. Programmatically defined using <code>alert.py</code>.</p>
+                
+                <h3 style="margin-top: 1.5rem;">Alerts Created</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Alert Type</th>
+                                <th>Condition</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>High Error Rate</strong></td>
+                                <td>> 5 errors/min for 5 min</td>
+                                <td>Detect service degradation early</td>
+                            </tr>
+                            <tr>
+                                <td><strong>High Latency</strong></td>
+                                <td>P95 latency > 2000ms for 3 min</td>
+                                <td>Catch slow API calls, resource constraints</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Low Success Rate</strong></td>
+                                <td>< 10 successes/min for 10 min</td>
+                                <td>Triggers on significant degradation or total failure</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box warning-box" style="margin-top: 1.5rem;">
+                    <p><strong>Why P95 Latency?</strong> Monitors outlier events that degrade user experience, not just averages</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 23 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 24: A2A Trace Example -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Observability: The A2A Trace Log</h2>
+                <p><strong>Scenario:</strong> "What should I wear for hiking in Seattle today? I run cold."</p>
+                <div class="table-container" style="margin-top: 1rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Span Name</th>
+                                <th>Agent/Tool</th>
+                                <th>Status</th>
+                                <th>Duration</th>
+                                <th>Insight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>coach_agent.run_query</td>
+                                <td>Coach</td>
+                                <td>✅ Success</td>
+                                <td>412ms</td>
+                                <td>Orchestrates entire request</td>
+                            </tr>
+                            <tr>
+                                <td>└ classify_activity</td>
+                                <td>Activity Tool</td>
+                                <td>✅ Success</td>
+                                <td>45ms</td>
+                                <td>"hiking" → sports/high_movement</td>
+                            </tr>
+                            <tr>
+                                <td>└ get_user_preferences</td>
+                                <td>Memory Tool</td>
+                                <td>✅ Success</td>
+                                <td>12ms</td>
+                                <td>Loaded comfort: runs_cold</td>
+                            </tr>
+                            <tr>
+                                <td>└ call_weather_agent</td>
+                                <td>Weather (A2A)</td>
+                                <td>✅ Success</td>
+                                <td><strong>125ms</strong></td>
+                                <td><strong>CACHE HIT</strong> - Fetched forecast</td>
+                            </tr>
+                            <tr>
+                                <td>└ call_stylist_agent</td>
+                                <td>Stylist (A2A)</td>
+                                <td>✅ Success</td>
+                                <td>180ms</td>
+                                <td>Generated OutfitPlan with all context</td>
+                            </tr>
+                            <tr>
+                                <td>└ check_safety</td>
+                                <td>Safety Tool</td>
+                                <td>✅ Success</td>
+                                <td>30ms</td>
+                                <td>No warnings required</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 24 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 25: Proof of Optimization -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Trace Log Insight: Proof of Optimization</h2>
+                <h3>Key Insight</h3>
+                <p>The <code>call_weather_agent</code> span completed in only <strong>125ms</strong>.</p>
+                
+                <h3 style="margin-top: 1.5rem;">Conclusion</h3>
+                <p>This low duration confirms the Smart Caching optimization was effective, resulting in a <strong>cache hit</strong>. This directly reduces dependency on the external Meteostat API and improves user-facing latency.</p>
+                
+                <h3 style="margin-top: 1.5rem;">Production Metrics Evidence</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Observed Value</th>
+                                <th>Target vs. Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Requests/Second (Traffic)</td>
+                                <td>0.4/s Peak</td>
+                                <td>Validating system load under concurrent requests</td>
+                            </tr>
+                            <tr>
+                                <td>Median Latency (p50)</td>
+                                <td><strong>80 ms</strong></td>
+                                <td><strong>Exceeds target</strong> - Proves caching efficiency</td>
+                            </tr>
+                            <tr>
+                                <td>95th Percentile (p95)</td>
+                                <td><strong>126 ms</strong></td>
+                                <td>Shows worst-case UX is still fast</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 25 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Part IV - Production -->
+        <div class="page" >
+            <div class="page-content section-title-page">
+                <p class="part-number">Part IV</p>
+                <h2>Prototype to Production<br>& Testing</h2>
+                <p class="subtitle">(Day 5)</p>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 26 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 27: Deployment Target -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Deployment Target: Vertex AI Agent Engine</h2>
+                <p><strong>Goal:</strong> Move from local development to scalable, production-ready microservices on Google Cloud.</p>
+                
+                <h3 style="margin-top: 1.5rem;">Key Features</h3>
+                <ul class="content-list">
+                    <li><strong>Platform:</strong> Vertex AI Agent Engine Runtime - Managed service for ADK agents</li>
+                    <li><strong>Services:</strong> Each agent deployed as independent service with dedicated endpoint (e.g., <code>weather-agent-abc.a.run.app</code>)</li>
+                    <li><strong>Networking:</strong> Coach Agent uses remote A2A Protocol URLs for communication</li>
+                    <li><strong>Managed State:</strong> Durable, highly available Session Storage for Coach Agent</li>
+                    <li><strong>Built-in Observability:</strong> Auto-integration with Cloud Trace & Cloud Logging</li>
+                    <li><strong>Simplified Deployment:</strong> Focus on agent logic, not infrastructure</li>
+                </ul>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 27 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 28: Why Agent Engine? -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Production Rationale: Why Agent Engine?</h2>
+                <h3>Cloud Run vs. Agent Engine</h3>
+                <p>While Cloud Run offers general flexibility for stateless containers, <strong>Agent Engine</strong> was chosen for built-in enterprise features required for stateful, complex agents.</p>
+                
+                <h3 style="margin-top: 1.5rem;">Key Agent Engine Advantages</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Advantage</th>
+                                <th>Benefit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Managed State</strong></td>
+                                <td>Durable, highly available Session Storage crucial for persistence</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Built-in Observability</strong></td>
+                                <td>Automatically integrates with Cloud Trace/Logging for audit trail</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Simplified Deployment</strong></td>
+                                <td>Offloads complex plumbing, focus on core agent logic</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 28 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 29: A2A Benefits -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>A2A Rationale: Why Not Local Sub-Agents?</h2>
+                <ul class="content-list">
+                    <li><strong>Independent Scaling:</strong> Weather agent can scale to 10 instances (or zero) during peak hours without impacting Stylist agent</li>
+                    <li><strong>Framework Agnostic:</strong> Weather agent could be swapped for Java-based legacy service as long as it adheres to A2A Protocol Contract (The Agent Card)</li>
+                    <li><strong>Clean Contract:</strong> Communication limited to structured payloads (e.g., WeatherContext JSON), preventing memory pollution and side effects</li>
+                    <li><strong>Security:</strong> Agent Identity & Least Privilege - Each agent has restricted permissions (mitigates Confused Deputy Problem)</li>
+                    <li><strong>Resilience:</strong> Failure isolation - One agent's crash doesn't cascade to others</li>
+                    <li><strong>Testability:</strong> Each agent can be tested independently with mock inputs</li>
+                </ul>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 29 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 30: System Architecture -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Deployment Architecture: 6-Service System</h2>
+                <p>The system runs as a fully integrated ADK Multi-Agent System with 6 services:</p>
+                
+                <div class="table-container" style="margin-top: 1.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Port</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Flask Frontend</strong></td>
+                                <td>5000</td>
+                                <td>User interface with Tailwind CSS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Coach Agent</strong></td>
+                                <td>8000</td>
+                                <td>Main orchestrator using A2A protocol</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Weather Agent</strong></td>
+                                <td>8001</td>
+                                <td>Weather data fetching and caching</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stylist Agent</strong></td>
+                                <td>8002</td>
+                                <td>Outfit recommendation engine</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Activity Agent</strong></td>
+                                <td>8003</td>
+                                <td>Activity classification</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Safety Agent</strong></td>
+                                <td>8004</td>
+                                <td>Extreme weather alerts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Local Testing:</strong> Docker Compose for multi-service testing</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 30 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 31: Testing & Verification -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Testing & Verification</h2>
+                <p>Verified all 5 system components (Tools, Agents, App, Schemas, Memory) function independently before deployment.</p>
+                
+                <div class="two-column" style="margin-top: 1.5rem;">
+                    <div>
+                        <h3>✅ Component Tests Passed</h3>
+                        <ul class="content-list">
+                            <li>All ADK imports validated</li>
+                            <li>Tools tested independently</li>
+                            <li>Agents verified individually</li>
+                            <li>Memory system confirmed</li>
+                            <li>Schemas validated</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>✅ Integration Tests Passed</h3>
+                        <ul class="content-list">
+                            <li>End-to-end A2A flows</li>
+                            <li>Cache hit validation</li>
+                            <li>Safety thresholds verified</li>
+                            <li>Persona personalization tested</li>
+                            <li>Error handling confirmed</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="success-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Result:</strong> 5/5 tests passed - System fully functional and ready for A2A integration</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 31 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 32: AgentOps Loop -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>The AgentOps Loop: Observe → Act → Evolve</h2>
+                <h3>Real Production Scenario</h3>
+                
+                <div class="three-column" style="margin-top: 1.5rem;">
+                    <div>
+                        <h3 style="color: #1e40af;">Observe</h3>
+                        <p>User logs show spike in error calls to external weather API</p>
+                    </div>
+                    <div>
+                        <h3 style="color: #f59e0b;">Act (Mitigation)</h3>
+                        <p>High Error Rate Alert triggers → MLOps team scales down to reduce load on failing API</p>
+                    </div>
+                    <div>
+                        <h3 style="color: #059669;">Evolve (Long-Term)</h3>
+                        <p>Team creates test cases, strengthens caching/retry logic, deploys via CI/CD with Safe Rollout (Canary)</p>
+                    </div>
+                </div>
+
+                <div class="box" style="margin-top: 2rem;">
+                    <p><strong>Production Mindset:</strong> Continuous monitoring enables proactive issue resolution before user impact</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 32 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 33: Frontend Features -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Weather Outfit ADK - Frontend</h2>
+                <p>Beautiful, modern chat interface for the Weather Outfit Assistant</p>
+                
+                <h3 style="margin-top: 1.5rem;">🎨 Features</h3>
+                <div class="two-column">
+                    <ul class="content-list">
+                        <li>Clean, Modern UI (Material Design)</li>
+                        <li>Real-time Chat Interface</li>
+                        <li>Quick Action Prompts</li>
+                        <li>Responsive Design</li>
+                    </ul>
+                    <ul class="content-list">
+                        <li>Session Management</li>
+                        <li>Location-Aware Quick Actions</li>
+                        <li>Outfit Icons for Visual Appeal</li>
+                        <li>Tailwind CSS Styling</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 1.5rem;">🔌 API Endpoints</h3>
+                <ul class="content-list">
+                    <li><code>POST /api/chat</code> - Sends message to Coach agent (proxied to ADK Agent Engine)</li>
+                    <li><code>GET /health</code> - Health check endpoint</li>
+                </ul>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 33 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 34: Location-Aware Features -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Location-Aware Features</h2>
+                <p>Quick action buttons and outfit suggestions change based on which city you search for.</p>
+                
+                <h3 style="margin-top: 1.5rem;">Test Scenarios</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Quick Actions</th>
+                                <th>Context</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Seattle</strong></td>
+                                <td>"Good for hiking?", "Rain gear needed?"</td>
+                                <td>Pacific Northwest - Hiking & Rain</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Denver</strong></td>
+                                <td>"Mountain hiking?", "Cold weather gear?"</td>
+                                <td>Mountains & Snow</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Miami</strong></td>
+                                <td>"Beach ready?", "Pool party?"</td>
+                                <td>Beach & Hot Weather</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 1.5rem;">👕 Outfit Icons</h3>
+                <ul class="content-list">
+                    <li>T-Shirt → Shirt icon</li>
+                    <li>Jeans → Apparel icon</li>
+                    <li>Watch/Bracelet → Watch icon ⌚</li>
+                    <li>Backpack/Bag → Shopping bag icon 🛍️</li>
+                    <li>Scarf → Scatter plot icon (when cold)</li>
+                </ul>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 34 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 35: Deployment Methods -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Deployment Guide: 3 Methods</h2>
+                
+                <div class="three-column" style="margin-top: 1.5rem;">
+                    <div>
+                        <h3>Method 1</h3>
+                        <p><strong>Deploy All Agents (MVP)</strong></p>
+                        <ul class="content-list">
+                            <li>Entire system as single ADK app</li>
+                            <li>Simplest method</li>
+                            <li>All agents scale together</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Method 2</h3>
+                        <p><strong>Deploy A2A Services</strong></p>
+                        <ul class="content-list">
+                            <li>Each agent as independent service</li>
+                            <li>True A2A architecture</li>
+                            <li>Independent scaling</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Method 3</h3>
+                        <p><strong>Deploy to Cloud Run</strong></p>
+                        <ul class="content-list">
+                            <li>More infrastructure control</li>
+                            <li>Custom containerization</li>
+                            <li>Flexible networking</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="box" style="margin-top: 2rem;">
+                    <p><strong>Post-Deployment:</strong> Test Coach Agent endpoint using standard curl command</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 35 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 36: Alert Policies Advanced -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Alert Policies Guide (Advanced)</h2>
+                <h3>Problem with Simple Rate Alerts</h3>
+                <p>Default alerts (e.g., > 5 errors/min) are <strong>rate-based</strong>. They don't distinguish between 5 errors in 10 requests (50% error rate) and 5 errors in 10,000 requests (0.05% error rate).</p>
+                
+                <h3 style="color: #059669; margin-top: 1.5rem;">Solution: Ratio-Based Alerts (MQL)</h3>
+                <p>For true production monitoring, use <strong>MQL (Monitoring Query Language)</strong> to calculate ratios. This provides accurate percentage-based alerting regardless of traffic volume.</p>
+                
+                <div class="code-snippet" style="margin-top: 1.5rem; font-size: 0.7rem;">
+<span class="comment">-- MQL for Error Rate Alert (> 5%)</span>
+fetch global
+| { metric 'custom.googleapis.com/agent/agent_calls'
+  | filter metric.status == 'error'
+  | align rate(1m)
+  | group_by [], [value_error: sum(value.agent_calls)] ;
+    metric 'custom.googleapis.com/agent/agent_calls'
+  | filter metric.status == 'success'
+  | align rate(1m)
+  | group_by [], [value_success: sum(value.agent_calls)] }
+| join
+| value [error_rate: cast_double(val(0)) / 
+               (cast_double(val(0)) + cast_double(val(1)))]
+| condition error_rate > <span class="string">0.05</span>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 36 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 37: Key Learnings -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Key Technical Learnings</h2>
+                <ul class="content-list">
+                    <li><strong>Architecture:</strong> Multi-agent systems scale better than monoliths when each agent has clear responsibility - Level 3 Collaborative Multi-Agent System is more robust and scalable</li>
+                    <li><strong>A2A Protocol:</strong> Enables independent deployment, scaling, and language flexibility across agents with clean contracts and failure isolation</li>
+                    <li><strong>Smart Caching:</strong> 15-minute cache TTL reduces API costs by ~70% while maintaining data freshness - Cache hits complete in 125ms vs 800ms+</li>
+                    <li><strong>Observability:</strong> Structured logs + metrics + traces + alerts = Production confidence. P95 latency monitoring catches outlier events</li>
+                    <li><strong>Context Engineering:</strong> Sessions (short-term) + Memory (long-term) = Personalized experiences. UserMemory class provides clean abstraction</li>
+                    <li><strong>Safety as Code:</strong> Deterministic guardrails (Safety Agent) ensure Responsible AI compliance with hard thresholds</li>
+                    <li><strong>Tool Design:</strong> Tools embody discrete, testable business logic. Structured output design prevents hallucination</li>
+                </ul>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 37 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 38: Final System Status -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Final System Status: Production Ready</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Component</th>
+                                <th>Confirmation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>A2A Architecture</td>
+                                <td>5 specialized agents communicating via A2A protocol</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Observability (Day 4)</td>
+                                <td>Logs, Metrics, Tracing, and Alerts fully implemented</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Context/Memory (Day 3)</td>
+                                <td>Personalization (Persona, Comfort) loaded from memory</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Performance (Day 2)</td>
+                                <td>Smart Caching operational (proven by low trace latency)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Testing (Day 5)</td>
+                                <td>All 5/5 component tests pass. Full orchestration verified</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Deployment Ready</td>
+                                <td>Designed for and deployable to Vertex AI Agent Engine</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="success-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Production URL:</strong> https://agentengine-689252953158.us-central1.run.app/</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 38 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- PART V: CODE APPENDICES -->
+        
+        <!-- Part V Section Marker -->
+        <div class="page" >
+            <div class="page-content section-title-page">
+                <p class="part-number">Part V</p>
+                <h2>Code & Implementation</h2>
+                <p class="subtitle">(Appendices A-P)</p>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 39 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 41: Agent Taxonomy -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Agent Fundamentals: Level 3 Multi-Agent System</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Level 1</strong></td>
+                                <td>Connected Problem Solver</td>
+                                <td>Single agent with weather API tool</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Level 2</strong></td>
+                                <td>Agent with Specialized Tools</td>
+                                <td>Agent with multiple domain tools</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Level 3</strong></td>
+                                <td>Collaborative Multi-Agent System</td>
+                                <td><strong>This Project: 5 specialized agents</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p style="margin-bottom: 0.75rem;"><strong>Core Metaphor (Day 1):</strong></p>
+                    <ul style="text-align: left; max-width: 800px; margin: 0 auto;">
+                        <li><strong>Model</strong> = Brain (Reasoning engine)</li>
+                        <li><strong>Tools</strong> = Hands (Actions and integrations)</li>
+                        <li><strong>Orchestration</strong> = Nervous System (Coordination)</li>
+                        <li><strong>Runtime (Agent Engine)</strong> = Body (Infrastructure)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 40 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 42: File/Folder Structure -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Project Folder Structure</h2>
+                <div class="code-block">
+                    <pre>weather_outfit_adk/
+├── app.py                    # Main ADK app entry point
+├── agents/
+│   ├── coach.py              # Coach orchestrator agent
+│   ├── weather.py            # Weather specialist agent
+│   ├── stylist.py            # Stylist recommendation agent
+│   ├── activity.py           # Activity classification agent
+│   └── safety.py             # Safety warning agent
+├── tools/
+│   ├── weather_tools.py      # Weather API + caching
+│   ├── outfit_tools.py       # Outfit planning logic
+│   ├── activity_tools.py     # Activity classification
+│   ├── safety_tools.py       # Safety threshold rules
+│   └── memory_tools.py       # User preference tools
+├── schemas/
+│   ├── memory.py             # UserPreferences, Persona types
+│   ├── weather.py            # WeatherData schema
+│   ├── outfit.py             # OutfitPlan schema
+│   └── activity.py           # Activity constraints schema
+├── memory/
+│   └── user_memory.py        # UserMemory class (storage abstraction)
+└── config/
+    ├── loging_confi.py       # Structured logging setup
+    ├── metrics.py            # MetricsCollector class
+    └── alert.py              # AlertPolicyManager class</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 41 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 43: Appendix A - Coach Agent Code -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix A: Coach Agent Code</h2>
+                <div class="code-block">
+                    <pre># coach.py
+from google.adk.agents import Agent
+from ..tools.weather_tools import get_weather_smart
+from ..tools.activity_tools import classify_activity
+from ..tools.outfit_tools import plan_outfit
+from ..tools.safety_tools import check_safety
+from ..tools.memory_tools import get_user_preferences, update_user_preferences
+
+coach_agent = Agent(
+    name="coach_agent",
+    model="gemini-2.0-flash-exp",
+    instruction="""You are the Weather Outfit Coach...
+    Workflow:
+    1. Get user preferences to personalize response
+    2. Extract city from query
+    3. If activity mentioned, classify using classify_activity
+    4. Get weather using get_weather_smart
+    5. Plan outfit using plan_outfit
+    6. Check safety using check_safety
+    7. Combine into friendly, personalized response
+    """,
+    tools=[
+        get_user_preferences, update_user_preferences,
+        get_weather_smart, classify_activity,
+        plan_outfit, check_safety
+    ]
+)</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 42 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 44: Appendix B - Weather Agent Code -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix B: Weather Agent Code</h2>
+                <div class="code-block">
+                    <pre># weather.py
+from google.adk.agents import Agent
+from ..tools.weather_tools import (
+    get_current_weather,
+    get_hourly_forecast,
+    get_weather_smart
+)
+
+weather_agent = Agent(
+    name="weather_agent",
+    model="gemini-2.0-flash-exp",
+    instruction="""You are a weather specialist agent.
+    Your role:
+    - Always call weather tools before providing info
+    - Never guess or use training data
+    - Return clean, structured forecast data
+    - Focus only on weather, not clothing
+    
+    Rules:
+    - Use get_weather_smart for efficiency (caches results)
+    """,
+    tools=[get_current_weather, get_hourly_forecast, get_weather_smart]
+)</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 43 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 45: Appendix C - Stylist Agent Code -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix C: Stylist Agent Code</h2>
+                <div class="code-block">
+                    <pre># stylist.py
+from google.adk.agents import Agent
+from ..tools.outfit_tools import plan_outfit
+
+stylist_agent = Agent(
+    name="stylist_agent",
+    model="gemini-2.0-flash-exp",
+    instruction="""You are a clothing and style advisor agent.
+    Your role:
+    - Take structured weather data and user preferences
+    - Use plan_outfit tool to generate recommendations
+    - Provide clear, practical advice with layers/accessories
+    - Never call weather APIs yourself
+    
+    Style approaches based on persona:
+    - Practical: Focus on function, comfort, simplicity
+    - Fashion: Add style tips, color coordination, trends
+    - Kid-friendly: Use fun language, prioritize safety
+    """,
+    tools=[plan_outfit]
+)</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 44 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 46: Appendix D & E - Activity & Safety Agents -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix D & E: Activity & Safety Agents</h2>
+                <div class="code-block">
+                    <pre># activity.py
+activity_agent = Agent(
+    name="activity_agent",
+    model="gemini-2.0-flash-exp",
+    instruction="""Classify user activity into:
+    - Work: Office, meetings (business_casual, low movement)
+    - Sports: Hiking, biking (casual, high movement)
+    - Formal: Dates, dinners (formal, low movement)
+    - Casual: Walking, shopping (casual, medium movement)
+    """,
+    tools=[classify_activity]
+)
+
+# safety.py
+safety_agent = Agent(
+    name="safety_agent",
+    model="gemini-2.0-flash-exp",
+    instruction="""Review weather for risks.
+    Safety thresholds:
+    - Extreme cold: Below 20°F
+    - Extreme heat: Above 95°F
+    - Strong winds: Above 25 mph
+    - Heavy rain/storms: Above 70% chance
+    """,
+    tools=[check_safety]
+)</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 45 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 47: Appendix F - User Memory Class -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix F: User Memory Implementation</h2>
+                <div class="code-block">
+                    <pre># user_memory.py
+from typing import Dict, Optional
+from ..schemas.memory import UserPreferences, PersonaType, ComfortProfile
+
+class UserMemory:
+    """Manages long-term user preferences and profile data."""
+    
+    def __init__(self):
+        self._memory_store: Dict[str, UserPreferences] = {}
+    
+    def get_preferences(self, user_id: str) -> UserPreferences:
+        """Retrieve user preferences from memory."""
+        if user_id not in self._memory_store:
+            self._memory_store[user_id] = UserPreferences()
+        return self._memory_store[user_id]
+    
+    def update_preferences(
+        self, user_id: str,
+        persona: Optional[PersonaType] = None,
+        comfort_profile: Optional[ComfortProfile] = None,
+        default_city: Optional[str] = None
+    ) -> UserPreferences:
+        current_prefs = self.get_preferences(user_id)
+        if persona: current_prefs.persona = persona
+        if comfort_profile: current_prefs.comfort_profile = comfort_profile
+        if default_city: current_prefs.default_city = default_city
+        return current_prefs</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 46 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 48: Appendix G - Metrics Code -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix G: Metrics Implementation</h2>
+                <div class="code-block">
+                    <pre># metrics.py
+from contextlib import contextmanager
+import time
+
+class MetricsCollector:
+    @contextmanager
+    def measure_time(self, metric_name: str, labels=None):
+        """Context manager to measure execution time"""
+        start_time = time.time()
+        try:
+            yield
+        finally:
+            duration_ms = (time.time() - start_time) * 1000
+            self.record_latency(metric_name, duration_ms, labels)
+    
+    def increment_counter(self, metric_name: str, value=1, labels=None):
+        # Increments in-memory counter
+        if self.enabled:
+            self._write_custom_metric(...)
+    
+    def record_latency(self, metric_name: str, duration_ms: float, labels=None):
+        # Records in-memory timer
+        if self.enabled:
+            self._write_custom_metric(...)
+
+# Global instance
+agent_metrics = MetricsCollector()</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 47 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 49: Appendix I - Logging Config -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix I: Structured Logging Configuration</h2>
+                <div class="code-block">
+                    <pre># loging_confi.py
+import logging, sys
+from google.cloud import logging as cloud_logging
+
+def setup_logging(service_name: str, level="INFO", 
+                  enable_cloud_logging=True) -> logging.Logger:
+    logger = logging.getLogger(service_name)
+    logger.setLevel(getattr(logging, level.upper()))
+    
+    # Structured JSON format
+    formatter = logging.Formatter(
+        '{"time": "%(asctime)s", "level": "%(levelname)s", '
+        '"service": "' + service_name + '", "message": "%(message)s"}',
+        datefmt='%Y-%m-%dT%H:%M:%S'
+    )
+    
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+    
+    # Cloud Logging integration
+    if enable_cloud_logging:
+        client = cloud_logging.Client(project=project_id)
+        cloud_handler = client.get_default_handler()
+        logger.addHandler(cloud_handler)
+    
+    return logger</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 48 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 50: Appendix J - System Test Log -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix J: Full System Test Log</h2>
+                <div class="code-block">
+                    <pre>✅ All tools imported successfully
+[WARNING] No RAPIDAPI_KEY found - using mock weather data
+✅ Weather: 65.0°F, partly cloudy
+✅ Activity: sports, formality=casual
+✅ Outfit: long-sleeve shirt or light sweater, no jacket
+✅ Safety: high risk
+✅ Memory: persona=practical, comfort=neutral
+✅ Updated: persona=fashion, city=Seattle
+✅ ADK Agent class imported
+✅ All agents imported successfully
+  - Coach has 6 tools
+✅ Main app.py imported successfully
+✅ ADK app name: app
+✅ All schemas imported
+✅ WeatherData: 65.0°F
+✅ UserPreferences: practical
+✅ UserMemory instance created
+✅ Preferences stored
+✅ Preferences retrieved: Portland
+✅ Multiple users supported
+✅ All 5/5 tests passed
+✅ All tools functional
+✅ All agents operational
+✅ Main app ready
+✅ Schemas validated
+✅ Memory system integrated</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 49 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 51: Appendix L - Frontend Features -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix L: Frontend README</h2>
+                <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Modern Chat Interface Features</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Implementation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Clean Modern UI</strong></td>
+                                <td>Material Design with Tailwind CSS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Real-time Chat</strong></td>
+                                <td>WebSocket connection to Coach Agent</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Quick Prompts</strong></td>
+                                <td>Location-aware quick action buttons</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Session Management</strong></td>
+                                <td>Persistent conversations with Agent Engine</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Outfit Icons</strong></td>
+                                <td>Visual icons for each clothing item</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>API Endpoints:</strong></p>
+                    <p>POST /api/chat - Send message to Coach agent</p>
+                    <p>GET /health - Health check endpoint</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 50 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 52: Appendix P - Frontend Testing -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix P: Location-Aware Frontend Features</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Test</th>
+                                <th>Action</th>
+                                <th>Expected Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Seattle</strong></td>
+                                <td>Type "Seattle"</td>
+                                <td>Buttons: "Good for hiking?", "Rain gear needed?"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Denver</strong></td>
+                                <td>Type "Denver"</td>
+                                <td>Buttons: "Mountain hiking?", "Cold weather gear?"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Miami</strong></td>
+                                <td>Type "Miami"</td>
+                                <td>Buttons: "Beach ready?", "Pool party?"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Outfit Icons Mapping</h3>
+                <div class="box">
+                    <ul style="text-align: left; max-width: 700px; margin: 0 auto;">
+                        <li><strong>T-Shirt</strong> → Shirt icon 👕</li>
+                        <li><strong>Jeans</strong> → Apparel icon 👖</li>
+                        <li><strong>Watch/Bracelet</strong> → Watch icon ⌚</li>
+                        <li><strong>Backpack/Bag</strong> → Shopping bag icon 🛍️</li>
+                        <li><strong>Scarf</strong> → Scatter plot icon (cold weather)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 51 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 53: Appendix M - Deployment Methods -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix M: Three Deployment Methods</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Description</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Method 1: All Agents (MVP)</strong></td>
+                                <td>Deploy entire system as single ADK app</td>
+                                <td>Simplest deployment, all agents scale together</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Method 2: A2A Services</strong></td>
+                                <td>Deploy each agent as independent service</td>
+                                <td>True microservices, independent scaling</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Method 3: Cloud Run</strong></td>
+                                <td>Deploy to Cloud Run containers</td>
+                                <td>More infrastructure control, custom configs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Post-Deployment Test:</strong></p>
+                    <pre style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-top: 0.5rem;">curl -X POST https://YOUR-ENDPOINT/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What should I wear in Seattle today?"}'</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 52 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 54: Appendix N - Advanced Alert Policies (MQL) -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix N: Advanced Alert Policies (MQL)</h2>
+                <h3 style="margin-bottom: 1rem;">Problem with Simple Rate Alerts</h3>
+                <p style="max-width: 900px; margin: 0 auto 1.5rem;">Default alerts (e.g., > 5 errors/min) are rate-based. They don't distinguish between 5 errors in 10 requests (50% error rate) vs. 5 errors in 10,000 requests (0.05%).</p>
+
+                <h3 style="margin-bottom: 1rem;">Solution: Ratio-Based Alerts with MQL</h3>
+                <div class="code-block">
+                    <pre>-- MQL for Error Rate > 5%
+fetch global
+| { metric 'custom.googleapis.com/agent/agent_calls'
+  | filter metric.status == 'error'
+  | align rate(1m)
+  | group_by [], [value_error: sum(value.agent_calls)]
+  ;
+  metric 'custom.googleapis.com/agent/agent_calls'
+  | filter metric.status == 'success'
+  | align rate(1m)
+  | group_by [], [value_success: sum(value.agent_calls)]
+  }
+| join
+| value [error_rate: cast_double(val(0)) / 
+                    (cast_double(val(0)) + cast_double(val(1)))]
+| condition error_rate > 0.05</pre>
+                </div>
+
+                <div class="info-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Benefit:</strong> Accurate percentage-based alerting regardless of traffic volume</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 53 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 55: Appendix O - 6-Service Architecture -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Appendix O: Production Architecture (6 Services)</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Port</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Flask Frontend</strong></td>
+                                <td>5000</td>
+                                <td>User interface with Tailwind CSS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Coach Agent</strong></td>
+                                <td>8000</td>
+                                <td>Main orchestrator using A2A protocol</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Weather Agent</strong></td>
+                                <td>8001</td>
+                                <td>Weather data fetching and caching</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stylist Agent</strong></td>
+                                <td>8002</td>
+                                <td>Outfit recommendation engine</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Activity Agent</strong></td>
+                                <td>8003</td>
+                                <td>Activity classification</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Safety Agent</strong></td>
+                                <td>8004</td>
+                                <td>Extreme weather alerts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="success-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Deployment:</strong> Docker Compose for local testing, Vertex AI Agent Engine for production</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 54 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 56: Tool Design Best Practices -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Tool Design Best Practices (Day 2)</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Principle</th>
+                                <th>Implementation</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Clear Names</strong></td>
+                                <td>Descriptive function names, not generic</td>
+                                <td>`get_day_summary` not `fetch_data`</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Represent Tasks</strong></td>
+                                <td>Tools embody business logic, not raw APIs</td>
+                                <td>`plan_outfit` encapsulates outfit rules</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Concise Output</strong></td>
+                                <td>Return only essential fields</td>
+                                <td>`temp`, `rain_chance`, `wind_speed` only</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Natural Language Docs</strong></td>
+                                <td>Clear docstrings for LLM understanding</td>
+                                <td>"""Get weather forecast for city..."""</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Short Parameters</strong></td>
+                                <td>Minimal, focused parameter lists</td>
+                                <td>`city, datetime` not 10+ parameters</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Optional Built-in Tools:</strong> Code execution (numerical conversions), URL context (severe weather alerts)</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 55 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 57: Context Engineering: Fetch-Prepare-Invoke-Upload -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Context Engineering Loop (Day 3)</h2>
+                <h3 style="margin-bottom: 1.5rem;">The Fetch → Prepare → Invoke → Upload Pattern</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Phase</th>
+                                <th>Action</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Fetch</strong></td>
+                                <td>Retrieve relevant memories</td>
+                                <td>`get_user_preferences(user_id)` → persona, comfort</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Prepare</strong></td>
+                                <td>Mix memories into context</td>
+                                <td>Inject persona into Stylist instructions</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Invoke</strong></td>
+                                <td>Execute agent with enriched context</td>
+                                <td>Coach calls Stylist with persona-aware prompt</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. Upload</strong></td>
+                                <td>Update memory if user provides new info</td>
+                                <td>`update_user_preferences` if user says "I run cold"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Privacy Note:</strong> Redact sensitive details (exact location, schedule) in stored sessions. Keep long-term memory as high-level facts only.</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 56 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 58: Sessions vs Memory Deep Dive -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Sessions vs. Memory: Complete Comparison</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>Session (Short-Term)</th>
+                                <th>Memory (Long-Term)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Scope</strong></td>
+                                <td>Single conversation</td>
+                                <td>Across all conversations</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lifetime</strong></td>
+                                <td>Minutes to hours</td>
+                                <td>Days, weeks, months</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Storage</strong></td>
+                                <td>Agent Engine Sessions</td>
+                                <td>UserMemory class / Database</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Content</strong></td>
+                                <td>City, time window, last forecast</td>
+                                <td>Persona, comfort profile, default city</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Update Frequency</strong></td>
+                                <td>Every turn in conversation</td>
+                                <td>Only when user shares new preference</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Multi-Agent</strong></td>
+                                <td>Separate per agent (A2A pattern)</td>
+                                <td>Shared across all agents</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Key Design Choice:</strong> Separate A2A histories prevent memory pollution and unexpected side effects</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 57 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 59: Sample Trace Walkthrough -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Sample Trace Walkthrough (Part 1)</h2>
+                <h3 style="margin-bottom: 1rem;">User Query: "What should I wear for a walk at 7pm in Redmond?"</h3>
+
+                <div class="code-block">
+                    <pre><strong>Step 1: User → Coach Agent</strong>
+Input: "What should I wear for a walk at 7pm in Redmond?"
+User ID: user_123 (no preferences stored yet)
+
+<strong>Step 2: Coach → Memory Tool</strong>
+Tool Call: get_preferences_for_user(user_123)
+Response: {} (empty - no preferences)
+
+<strong>Step 3: Coach → User (Followup)</strong>
+"To personalize: Do you prefer practical, fashion, or kid-friendly style?"
+
+<strong>Step 4: User → Coach</strong>
+"Practical please"
+
+<strong>Step 5: Coach → Memory Tool</strong>
+Tool Call: set_preferences_for_user(user_123, "practical", "neutral")
+Response: {persona: "practical", comfort_profile: "neutral"}</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 58 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 60: Sample Trace Walkthrough (Part 2) -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Sample Trace Walkthrough (Part 2)</h2>
+
+                <div class="code-block">
+                    <pre><strong>Step 6: Coach → Activity Agent (A2A)</strong>
+Message: {activity_text: "walk"}
+Response: {category: "casual", formality: "casual", movement: "medium"}
+
+<strong>Step 7: Coach → Weather Agent (A2A)</strong>
+Message: {city: "Redmond", time_window: "evening"}
+Response: {temp_c: 12.0, rain_chance: 0.6, wind_speed: 15.0, ...}
+Source: cache (CACHE HIT - 125ms)
+
+<strong>Step 8: Coach → Stylist Agent (A2A)</strong>
+Message: {weather_context, activity, persona: "practical"}
+Response: {top_outer: "light jacket", bottom: "jeans", ...}
+
+<strong>Step 9: Coach → Safety Agent (A2A)</strong>
+Message: {weather_context}
+Response: {risk_level: "medium", safety_note: "High chance of rain..."}
+
+<strong>Step 10: Coach → User</strong>
+"For your evening walk in Redmond: Light jacket, jeans, waterproof 
+shoes recommended. 60% chance of rain - bring an umbrella!"</pre>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 59 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 61: Four Pillars of Agent Quality -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Four Pillars of Agent Quality (Day 4)</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pillar</th>
+                                <th>Weather Outfit Implementation</th>
+                                <th>Metric/Test</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Effectiveness</strong></td>
+                                <td>Suggestion matches actual forecast</td>
+                                <td>User satisfaction, accuracy checks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Efficiency</strong></td>
+                                <td>Smart caching, minimal tool calls</td>
+                                <td>Tokens/interaction, latency (80ms p50)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Robustness</strong></td>
+                                <td>Graceful degradation on API failure</td>
+                                <td>Error rate tracking, fallback behavior</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Safety</strong></td>
+                                <td>Dedicated Safety Agent, no medical advice</td>
+                                <td>Warning coverage, content filters</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Trajectory is Truth:</strong> Observability captures the entire decision path, not just final output</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 60 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 62: Debugging Example -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Debugging: Resolving Test Failure</h2>
+                <h3 style="margin-bottom: 1rem;">Error from Test Log</h3>
+                <div class="error-box box">
+                    <pre>❌ App import failed: 'Flask' object has no attribute 'root_agent'</pre>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Root Cause</h3>
+                <p style="max-width: 800px; margin: 0 auto 1.5rem;">Test script `test_full_system_with_metrics.py` imported the <strong>Flask frontend</strong> `app.py` instead of the <strong>ADK backend</strong> `app.py`. Flask app has no `.root_agent` attribute.</p>
+
+                <h3 style="margin-bottom: 1rem;">The Fix</h3>
+                <div class="success-box box">
+                    <p><strong>Solution:</strong> Renamed entry points and corrected import path to point to ADK `App` object</p>
+                    <p style="margin-top: 0.5rem;"><strong>Final Status:</strong> All 5/5 tests passed after fixing import path</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 61 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 63: Multi-Framework Pattern -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Multi-Framework & Multi-Service Patterns</h2>
+                <h3 style="margin-bottom: 1.5rem;">Why A2A Enables Framework Agnosticism</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Agent</th>
+                                <th>Current Framework</th>
+                                <th>Could Be Replaced With</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Weather Agent</strong></td>
+                                <td>Python ADK</td>
+                                <td>Java legacy service, external vendor API</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stylist Agent</strong></td>
+                                <td>Python ADK + Gemini</td>
+                                <td>LangChain + OpenAI, custom ML model</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Safety Agent</strong></td>
+                                <td>Python ADK</td>
+                                <td>Rule engine service (no LLM needed)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Key Requirement:</strong> Each agent must adhere to A2A Protocol Contract (The Agent Card)</p>
+                    <p style="margin-top: 0.5rem;"><strong>Benefit:</strong> Swap implementations without touching other agents</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 62 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 64: Final System Status - Complete -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Final System Status: Production Ready</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Component</th>
+                                <th>Confirmation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>A2A Architecture (Day 5)</td>
+                                <td>5 specialized agents communicating via A2A protocol</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Observability (Day 4)</td>
+                                <td>Logs, Metrics, Traces, Alerts fully operational</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Context/Memory (Day 3)</td>
+                                <td>Persona & Comfort personalization from memory</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Performance (Day 2)</td>
+                                <td>Smart Caching (15min TTL, cache hits @ 125ms)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Agent Fundamentals (Day 1)</td>
+                                <td>Level 3 Multi-Agent System implemented</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Testing</td>
+                                <td>All 5/5 component tests pass, full orchestration verified</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Deployment</td>
+                                <td>Deployed to Vertex AI Agent Engine</td>
+                            </tr>
+                            <tr>
+                                <td><strong>✅</strong></td>
+                                <td>Frontend</td>
+                                <td>Modern chat UI with location-aware features</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="success-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Production URL:</strong> https://agentengine-689252953158.us-central1.run.app/</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 63 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- PART VI: ADVANCED CONCEPTS FROM COURSE MATERIALS -->
+
+        <!-- Slide 66: The 5-Step Agentic Problem-Solving Process -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>The 5-Step Agentic Problem-Solving Process</h2>
+                <h3 style="margin-bottom: 1.5rem;">From Concept to Execution</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Step</th>
+                                <th>Action</th>
+                                <th>Example (Customer Support)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Get the Mission</strong></td>
+                                <td>Receive high-level goal from user or trigger</td>
+                                <td>"Where is my order #12345?"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Scan the Scene</strong></td>
+                                <td>Gather context from memory, tools, user input</td>
+                                <td>Check what tools are available, user history</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Think It Through</strong></td>
+                                <td>Devise multi-step plan using reasoning model</td>
+                                <td>"Find order → Get tracking → Report status"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. Take Action</strong></td>
+                                <td>Execute first step by invoking appropriate tool</td>
+                                <td>Call `find_order("12345")` → Get tracking #</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. Observe & Iterate</strong></td>
+                                <td>Observe result, add to context, return to Step 3</td>
+                                <td>Got "Out for Delivery" → Synthesize response</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Key Insight:</strong> This "Think → Act → Observe" cycle continues until the Mission is achieved</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 64 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 67: Level 4 - Self-Evolving Systems -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Level 4: The Self-Evolving System (Future)</h2>
+                <h3 style="margin-bottom: 1rem;">Autonomous Creation & Adaptation</h3>
+                <p style="max-width: 900px; margin: 0 auto 1.5rem;">Level 4 agents can identify gaps in their capabilities and dynamically create new tools or agents to fill them.</p>
+
+                <div class="code-block">
+                    <pre><strong>Scenario: Solaris Headphones Launch</strong>
+
+Project Manager Agent realizes it needs social media sentiment tracking,
+but no such tool exists.
+
+<strong>Step 1: Meta-Reasoning</strong>
+Think: "I must track social media buzz for 'Solaris,' but I lack the capability."
+
+<strong>Step 2: Autonomous Creation</strong>
+Act: Invoke AgentCreator tool with mission:
+  "Build agent that monitors social media for 'Solaris headphones',
+   performs sentiment analysis, and reports daily summary."
+
+<strong>Step 3: Observe & Deploy</strong>
+Observe: New SentimentAnalysisAgent created, tested, and added to team.
+Result: Agent dynamically expanded its own capabilities mid-task.</pre>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Evolution:</strong> From using fixed resources to actively expanding them</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 65 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 68: Tool Taxonomy (Day 2) -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Tool Taxonomy: Four Primary Functions</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Purpose</th>
+                                <th>Examples</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Information Retrieval</strong></td>
+                                <td>Fetch data from various sources</td>
+                                <td>Web search, database queries, RAG, NL2SQL</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Action / Execution</strong></td>
+                                <td>Perform real-world operations</td>
+                                <td>Send emails, post messages, code execution, device control</td>
+                            </tr>
+                            <tr>
+                                <td><strong>System / API Integration</strong></td>
+                                <td>Connect with existing systems</td>
+                                <td>Google Workspace, enterprise APIs, third-party services</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Human-in-the-Loop</strong></td>
+                                <td>Facilitate human collaboration</td>
+                                <td>Ask clarification, seek approval, hand off for judgment</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Key Design Principles</h3>
+                <div class="box">
+                    <ul style="text-align: left; max-width: 800px; margin: 0 auto;">
+                        <li><strong>Publish tasks, not API calls</strong> - Tools should encapsulate business logic</li>
+                        <li><strong>Design for concise output</strong> - Avoid swamping context with large responses</li>
+                        <li><strong>Provide descriptive error messages</strong> - Guide LLM to correct mistakes</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 66 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 69: Session vs Memory Deep Analogy -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Session vs Memory: The Workbench Analogy</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th>Session (Workbench)</th>
+                                <th>Memory (Filing Cabinet)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Purpose</strong></td>
+                                <td>Temporary workspace for current task</td>
+                                <td>Organized long-term knowledge storage</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contents</strong></td>
+                                <td>Tools, notes, rough drafts, in-progress work</td>
+                                <td>Only critical, finalized documents in labeled folders</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Accessibility</strong></td>
+                                <td>Everything immediately accessible</td>
+                                <td>Clean, efficient retrieval system</td>
+                            </tr>
+                            <tr>
+                                <td><strong>After Task</strong></td>
+                                <td>Review, discard redundant items</td>
+                                <td>File only key information for future use</td>
+                            </tr>
+                            <tr>
+                                <td><strong>State</strong></td>
+                                <td>Temporary, specific to one project</td>
+                                <td>Persistent, available across all projects</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Key Insight:</strong> Session = messy but necessary workspace. Memory = curated knowledge base.</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 67 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 70: Outside-In Evaluation Hierarchy -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>"Outside-In" Evaluation Hierarchy (Day 4)</h2>
+                <h3 style="margin-bottom: 1rem;">From Black Box to Glass Box</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th>Question</th>
+                                <th>What We Measure</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Black Box (End-to-End)</strong></td>
+                                <td>Did agent achieve user's goal?</td>
+                                <td>Task success rate, user satisfaction, overall quality</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Glass Box (Trajectory)</strong></td>
+                                <td>Why did it succeed/fail?</td>
+                                <td>LLM planning quality, tool usage, parameter correctness</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Component-Level</strong></td>
+                                <td>Which component failed?</td>
+                                <td>Individual tool performance, API reliability, context quality</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Trajectory Evaluation Steps</h3>
+                <div class="box">
+                    <ol style="text-align: left; max-width: 800px; margin: 0 auto;">
+                        <li><strong>LLM Planning</strong> - Check for hallucinations, context pollution, loops</li>
+                        <li><strong>Tool Usage</strong> - Verify correct tool selection and parameterization</li>
+                        <li><strong>Tool Results</strong> - Validate external API responses and data quality</li>
+                        <li><strong>Context Management</strong> - Ensure memory and state are properly maintained</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 68 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 71: Agent Quality Flywheel -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>The Agent Quality Flywheel</h2>
+                <h3 style="margin-bottom: 1.5rem;">Continuous Improvement Loop</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Phase</th>
+                                <th>Action</th>
+                                <th>Output</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Capture</strong></td>
+                                <td>Collect logs, traces, metrics from production</td>
+                                <td>Complete trajectory data (Think → Act → Observe)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Evaluate</strong></td>
+                                <td>Run automated judges (LLM-as-Judge, metrics)</td>
+                                <td>Quality scores across 4 pillars (Effectiveness, Efficiency, Robustness, Safety)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Review</strong></td>
+                                <td>Human-in-the-loop for edge cases</td>
+                                <td>Validated test cases, corrected labels</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. Improve</strong></td>
+                                <td>Update prompts, tools, context engineering</td>
+                                <td>New agent version deployed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. Monitor</strong></td>
+                                <td>A/B test new version vs baseline</td>
+                                <td>Quantified improvement metrics → Return to Capture</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="success-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Result:</strong> Each iteration improves agent quality systematically, using data not guesswork</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 69 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 72: LLM-as-a-Judge Paradigm -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>LLM-as-a-Judge: Scalable Quality Evaluation</h2>
+                <h3 style="margin-bottom: 1rem;">Why Traditional Metrics Fail for Agents</h3>
+                <p style="max-width: 900px; margin: 0 auto 1.5rem;">How do you measure the "accuracy" of a generated paragraph? Traditional ML metrics (precision, recall, F1) don't apply to open-ended agent outputs.</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Evaluator Type</th>
+                                <th>Pros</th>
+                                <th>Cons</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Human Reviewers</strong></td>
+                                <td>Gold standard, nuanced judgment</td>
+                                <td>Expensive, slow, doesn't scale</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Automated Metrics</strong></td>
+                                <td>Fast, cheap, scales infinitely</td>
+                                <td>Can't judge quality, only format/presence</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LLM-as-a-Judge</strong></td>
+                                <td>Scales well, understands context, nuanced</td>
+                                <td>Requires careful prompt engineering, can have bias</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Best Practice:</strong> Use hybrid approach:</p>
+                    <ul style="text-align: left; max-width: 700px; margin: 0.5rem auto 0;">
+                        <li>Automated metrics for syntax/format</li>
+                        <li>LLM-as-Judge for semantic quality at scale</li>
+                        <li>Human-in-the-Loop for edge cases and validation</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 70 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 73: Multi-Agent Session Management Patterns -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Multi-Agent Session Management (Day 3)</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pattern</th>
+                                <th>How It Works</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Shared, Unified History</strong></td>
+                                <td>All agents read/write to same conversation log</td>
+                                <td>Tightly coupled collaborative tasks (problem-solving pipeline)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Separate, Individual Histories</strong></td>
+                                <td>Each agent maintains private log, communicates via messages</td>
+                                <td>Loosely coupled systems, microservices architecture</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Agent-as-a-Tool</strong></td>
+                                <td>One agent invokes another as tool, receives final output only</td>
+                                <td>Delegation with black-box sub-agents</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A2A Protocol</strong></td>
+                                <td>Structured messaging between agents using standard protocol</td>
+                                <td>Cross-framework interoperability, enterprise systems</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box box" style="margin-top: 1.5rem;">
+                    <p><strong>Weather Outfit Advisor:</strong> Uses separate histories + A2A Protocol for clean agent boundaries and framework agnosticism</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 71 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Slide 74: Production Session Considerations -->
+        <div class="page" >
+            <div class="page-content">
+                <h2>Production Session Considerations (Day 3)</h2>
+                <h3 style="margin-bottom: 1.5rem;">From Prototype to Enterprise-Grade</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Requirement</th>
+                                <th>Solution</th>
+                                <th>Implementation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Security & Privacy</strong></td>
+                                <td>Strict user isolation, PII redaction</td>
+                                <td>ACLs per session, authenticated access only</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Integrity</strong></td>
+                                <td>Persistent storage, backup/recovery</td>
+                                <td>Managed database (Agent Engine Sessions), not in-memory</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Performance</strong></td>
+                                <td>Fast retrieval, context window management</td>
+                                <td>Indexed queries, conversation summarization</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Context Rot Prevention</strong></td>
+                                <td>Dynamic history compaction</td>
+                                <td>Summarization, selective pruning, token management</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box" style="margin-top: 1.5rem;">
+                    <p><strong>Context Rot:</strong> As context grows, cost/latency increase AND model's attention to critical info diminishes</p>
+                    <p style="margin-top: 0.5rem;"><strong>Solution:</strong> Dynamically mutate history via summarization or pruning</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 72 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Page 73: References -->
+        <div class="page">
+            <div class="page-content">
+                <h2 style="color: #4285F4; margin-bottom: 40px;">References</h2>
+                
+                <div style="font-size: 16px; line-height: 1.8; max-width: 1100px;">
+                    <p style="margin-bottom: 20px; padding-left: 40px; text-indent: -40px;">
+                        Blount, A., Gulli, A., Saboo, S., Zimmermann, M., & Vuskovic, V. (2025, November). <em>Introduction to agents</em> [Whitepaper]. Kaggle. 
+                        <a href="https://www.kaggle.com/whitepaper-introduction-to-agents" style="color: #1967d2; text-decoration: none;">
+                            https://www.kaggle.com/whitepaper-introduction-to-agents
+                        </a>
+                    </p>
+                    
+                    <p style="margin-bottom: 20px; padding-left: 40px; text-indent: -40px;">
+                        Kartakis, S., Hernandez Larios, G., Li, R., Secchi, E., & Xia, H. (2025, November). <em>Prototype to production</em> [Whitepaper]. Kaggle. 
+                        <a href="https://www.kaggle.com/whitepaper-prototype-to-production" style="color: #1967d2; text-decoration: none;">
+                            https://www.kaggle.com/whitepaper-prototype-to-production
+                        </a>
+                    </p>
+                    
+                    <p style="margin-bottom: 20px; padding-left: 40px; text-indent: -40px;">
+                        Milam, K., & Gulli, A. (2025, November). <em>Context engineering sessions and memory</em> [Whitepaper]. Kaggle. 
+                        <a href="https://www.kaggle.com/whitepaper-context-engineering-sessions-and-memory" style="color: #1967d2; text-decoration: none;">
+                            https://www.kaggle.com/whitepaper-context-engineering-sessions-and-memory
+                        </a>
+                    </p>
+                    
+                    <p style="margin-bottom: 20px; padding-left: 40px; text-indent: -40px;">
+                        Styer, M., Patlolla, K., Mohan, M., & Diaz, S. (2025, November). <em>Agent tools and interoperability with MCP</em> [Whitepaper]. Kaggle. 
+                        <a href="https://www.kaggle.com/whitepaper-agent-tools-and-interoperability-with-mcp" style="color: #1967d2; text-decoration: none;">
+                            https://www.kaggle.com/whitepaper-agent-tools-and-interoperability-with-mcp
+                        </a>
+                    </p>
+                    
+                    <p style="margin-bottom: 20px; padding-left: 40px; text-indent: -40px;">
+                        Subasioglu, M., Bulmus, T., & Bakkali, W. (2025, November). <em>Agent quality</em> [Whitepaper]. Kaggle. 
+                        <a href="https://www.kaggle.com/whitepaper-agent-quality" style="color: #1967d2; text-decoration: none;">
+                            https://www.kaggle.com/whitepaper-agent-quality
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="info-box box" style="margin-top: 60px; max-width: 1100px;">
+                    <p><strong>Note:</strong> All references are from the Kaggle "5 Days of AI - Agents" course materials, which provided the foundational knowledge and practical implementation guidance for this capstone project.</p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 73 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+        <!-- Page 73: Thank You -->
+        <div class="page" >
+            <div class="page-content title-page">
+                <h1 style="font-size: 100px; margin-bottom: 30px;">Thank You</h1>
+                <p class="subtitle" style="font-size: 32px; font-weight: 400;">The Weather Outfit Advisor</p>
+                <p style="font-size: 20px; color: #5f6368; margin-top: 40px; line-height: 1.6;">A Multi-Agent System Leveraging ADK, A2A Protocol,<br>and Vertex AI Agent Engine</p>
+                
+                <div style="margin-top: 80px; text-align: center;">
+                    <p style="font-size: 24px; font-weight: 500; color: #4285F4; margin-bottom: 30px;">Questions & Discussion</p>
+                    <p style="font-size: 18px; color: #3c4043; margin: 15px 0;">
+                        <strong>GitHub:</strong> https://github.com/tabitha-dev
+                    </p>
+                    <p style="font-size: 18px; color: #3c4043; margin: 15px 0;">
+                        <strong>LinkedIn:</strong> https://www.linkedin.com/in/tabitha-dev/
+                    </p>
+                    <p style="font-size: 18px; color: #3c4043; margin-top: 30px;">
+                        <strong style="color: #34A853;">Production URL:</strong><br>
+                        <span style="font-size: 16px;">https://agentengine-689252953158.us-central1.run.app/</span>
+                    </p>
+                </div>
+            </div>
+            
+            <footer>
+                <p>Weather Outfit ADK Capstone | Page 74 of 74</p>
+                <div class="logo-bar"></div>
+            </footer>
+        </div>
+
+    </div>
+</body>
+</html>
