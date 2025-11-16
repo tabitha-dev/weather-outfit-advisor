@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Weather Outfit Assistance</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#4A90E2",
+            "background-light": "#F4F7F6",
+            "background-dark": "#101922",
+            "card-light": "#FFFFFF",
+            "card-dark": "#1A242E",
+            "text-light": "#333333",
+            "text-dark": "#EAEAEA",
+            "text-secondary-light": "#6b7280",
+            "text-secondary-dark": "#9ca3af",
+            "border-light": "#EAEAEA",
+            "border-dark": "#2d3748"
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "0.75rem",
+            "xl": "1rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+  <div class="flex h-screen w-full flex-col">
+    <!-- Header -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-light dark:border-border-dark px-6 md:px-10 py-3 bg-card-light dark:bg-card-dark shadow-sm">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 text-text-light dark:text-text-dark">
+          <span class="material-symbols-outlined text-primary text-3xl">ac_unit</span>
+          <h1 class="text-xl font-bold">Weather Outfit Assistance</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button id="notifications-btn" class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark hover:bg-gray-200 dark:hover:bg-gray-700">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <button id="settings-btn" class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark hover:bg-gray-200 dark:hover:bg-gray-700">
+          <span class="material-symbols-outlined">settings</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex flex-col lg:flex-row flex-1 overflow-hidden">
+      <!-- Left Panel: Search, Weather, Preferences, Outfit -->
+      <div class="flex-1 flex flex-col overflow-y-auto p-6 md:p-8 lg:p-10 min-h-0">
+        <div class="flex flex-col gap-6">
+          <!-- Search -->
+          <div class="flex flex-col gap-2">
+            <p class="text-3xl md:text-4xl font-black tracking-[-0.033em]">What to wear in...</p>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-4 text-text-secondary-light dark:text-text-secondary-dark">search</span>
+              <input id="city-search" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-text-light dark:text-text-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark focus:border-primary/50 h-14 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark pl-12 pr-14 text-lg shadow-sm" placeholder="Search for a city..." value="Redmond"/>
+              <button id="favorite-btn" class="absolute inset-y-0 right-0 flex items-center justify-center rounded-r-full px-4 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary">
+                <span class="material-symbols-outlined">favorite_border</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Weather & Outfit Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Weather & Preferences -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+              <!-- Weather Card -->
+              <div id="weather-card" class="flex items-stretch justify-between gap-4 rounded-xl bg-card-light dark:bg-card-dark p-6 shadow-sm border border-border-light dark:border-border-dark">
+                <div class="flex flex-col gap-1">
+                  <p id="weather-condition" class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Loading...</p>
+                  <p id="weather-temp" class="text-5xl font-black text-primary">--°F</p>
+                  <p id="weather-feels-like" class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Feels like --°F</p>
+                </div>
+                <div class="flex items-center justify-center">
+                  <span id="weather-icon" class="material-symbols-outlined text-7xl text-gray-400">partly_cloudy_day</span>
+                </div>
+              </div>
+
+              <!-- Outfit Preferences Card -->
+              <div class="flex flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark p-6 shadow-sm border border-border-light dark:border-border-dark">
+                <div class="flex items-center justify-between">
+                  <p class="font-bold text-lg">Outfit Preferences</p>
+                  <button id="edit-preferences-btn" class="text-sm font-medium text-primary hover:underline">Edit</button>
+                </div>
+                <div class="flex flex-col gap-3">
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">style</span>
+                    <div>
+                      <p class="font-semibold">Style</p>
+                      <p id="pref-style" class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Casual, Minimalist</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">checkroom</span>
+                    <div>
+                      <p class="font-semibold">Clothing Types</p>
+                      <p id="pref-clothing" class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Jackets, Jeans, Sneakers</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">palette</span>
+                    <div>
+                      <p class="font-semibold">Color Palette</p>
+                      <p id="pref-colors" class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Neutral, Blues</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Outfit Suggestions -->
+            <div class="lg:col-span-2">
+              <div class="flex items-center justify-between pb-4">
+                <h2 class="text-2xl font-bold tracking-[-0.015em]">Today's Outfit Suggestion</h2>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Good suggestion?</span>
+                  <button id="thumbs-up-btn" class="flex h-9 w-9 items-center justify-center rounded-full bg-background-light dark:bg-background-dark hover:bg-gray-200 dark:hover:bg-gray-700 text-text-secondary-light dark:text-text-secondary-dark">
+                    <span class="material-symbols-outlined !text-2xl">thumb_up</span>
+                  </button>
+                  <button id="thumbs-down-btn" class="flex h-9 w-9 items-center justify-center rounded-full bg-background-light dark:bg-background-dark hover:bg-gray-200 dark:hover:bg-gray-700 text-text-secondary-light dark:text-text-secondary-dark">
+                    <span class="material-symbols-outlined !text-2xl">thumb_down</span>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Outfit Items Grid -->
+              <div id="outfit-items" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Outfit items will be inserted here dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Sidebar: Chat -->
+      <aside class="w-full lg:max-w-sm flex-col border-t lg:border-t-0 lg:border-l border-solid border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark flex min-h-[300px] lg:min-h-0">
+        <div class="flex h-full flex-col min-h-0">
+          <!-- Chat Messages -->
+          <div id="chat-messages" class="flex-1 space-y-6 overflow-y-auto p-6">
+            <!-- Messages will be inserted here dynamically -->
+          </div>
+
+          <!-- Chat Input -->
+          <div class="border-t border-border-light dark:border-border-dark p-4">
+            <div class="quick-actions mb-3 flex flex-wrap gap-2">
+              <button class="quick-action-btn text-xs font-semibold rounded-full px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary/20">Any formal options?</button>
+              <button class="quick-action-btn text-xs font-semibold rounded-full px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary/20">What if it gets colder?</button>
+            </div>
+            <div class="relative">
+              <input id="chat-input" class="w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark py-2 pl-4 pr-12 text-sm focus:border-primary focus:ring-primary/50" placeholder="Ask me anything..." type="text"/>
+              <button id="send-btn" class="absolute inset-y-0 right-0 flex items-center justify-center rounded-r-lg px-4 text-primary hover:text-primary/80">
+                <span class="material-symbols-outlined">send</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

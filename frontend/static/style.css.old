@@ -1,0 +1,622 @@
+/* Weather Outfit Assistance - Modern UI with Preferences */
+
+:root {
+  --primary-blue: #4285f4;
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --text-light: #80868b;
+  --bg-gray: #f8f9fa;
+  --border-light: #dadce0;
+  --white: #ffffff;
+  --success-green: #34a853;
+  --error-red: #ea4335;
+  --shadow-sm: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+  --shadow-md: 0 1px 3px 0 rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-gray);
+  line-height: 1.5;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Header */
+.app-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border-light);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  color: var(--primary-blue);
+}
+
+.app-header h1 {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: background 0.2s;
+}
+
+.icon-btn:hover {
+  background: var(--bg-gray);
+}
+
+/* Main Content Layout */
+.main-content {
+  display: grid;
+  grid-template-columns: 320px 1fr 380px;
+  gap: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Weather Sidebar */
+.weather-sidebar {
+  background: var(--white);
+  padding: 24px 20px;
+  overflow-y: auto;
+  border-right: 1px solid var(--border-light);
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+/* Location Search */
+.location-search-section {
+  margin-bottom: 24px;
+}
+
+.search-bar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-gray);
+  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.search-bar-container:focus-within {
+  background: var(--white);
+  border-color: var(--primary-blue);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-icon {
+  color: var(--text-secondary);
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.search-bar-container input {
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  outline: none;
+  flex: 1;
+  color: var(--text-primary);
+  min-width: 0;
+}
+
+.search-bar-container input::placeholder {
+  color: var(--text-light);
+}
+
+.favorite-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.favorite-btn:hover {
+  color: var(--error-red);
+}
+
+.favorite-btn.active {
+  color: var(--error-red);
+}
+
+.favorite-btn.active svg {
+  fill: var(--error-red);
+}
+
+/* Weather Card */
+.weather-card {
+  background: var(--bg-gray);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.weather-current {
+  text-align: center;
+}
+
+.condition-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.temperature-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.temp-large {
+  font-size: 48px;
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.weather-icon {
+  width: 64px;
+  height: 64px;
+}
+
+.feels-like-display {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Outfit Preferences */
+.preferences-card {
+  background: var(--bg-gray);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.preferences-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.preferences-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.edit-btn {
+  font-size: 13px;
+  color: var(--primary-blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.edit-btn:hover {
+  background: var(--white);
+}
+
+.preference-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.preference-item:last-child {
+  border-bottom: none;
+}
+
+.pref-icon {
+  color: var(--text-secondary);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.pref-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.pref-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.pref-value {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Outfit Section */
+.outfit-section {
+  background: var(--bg-gray);
+  padding: 32px 48px;
+  overflow-y: auto;
+}
+
+.outfit-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.outfit-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.feedback-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feedback-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.feedback-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+  background: var(--white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.feedback-btn:hover {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+  transform: scale(1.1);
+}
+
+.feedback-btn.active {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: var(--white);
+}
+
+/* Outfit Items Grid */
+.outfit-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.outfit-item-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.outfit-item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-blue);
+}
+
+.outfit-icon-container {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  background: var(--bg-gray);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.outfit-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--primary-blue);
+}
+
+.item-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.item-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Chat Sidebar */
+.chat-sidebar {
+  background: var(--white);
+  border-left: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-message {
+  max-width: 85%;
+  animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-message.user {
+  align-self: flex-end;
+}
+
+.chat-message.assistant {
+  align-self: flex-start;
+}
+
+.message-bubble {
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.chat-message.user .message-bubble {
+  background: var(--primary-blue);
+  color: var(--white);
+  border-bottom-right-radius: 4px;
+}
+
+.chat-message.assistant .message-bubble {
+  background: var(--bg-gray);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+}
+
+.message-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.message-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--white);
+}
+
+.chat-message.assistant,
+.chat-message.user {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.chat-message.user .message-icon {
+  background: var(--bg-gray);
+  border: 2px solid var(--primary-blue);
+}
+
+.chat-message.user .message-icon svg {
+  color: var(--primary-blue);
+}
+
+.chat-quick-actions {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--border-light);
+}
+
+.quick-action-btn {
+  background: var(--bg-gray);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--primary-blue);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  text-align: left;
+}
+
+.quick-action-btn:hover {
+  background: var(--border-light);
+  transform: translateX(4px);
+}
+
+.chat-input-container {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#chat-input {
+  flex: 1;
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+  padding: 10px 16px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#chat-input:focus {
+  border-color: var(--primary-blue);
+}
+
+#send-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary-blue);
+  color: var(--white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#send-button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-sm);
+}
+
+#send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Scrollbar */
+.weather-sidebar::-webkit-scrollbar,
+.outfit-section::-webkit-scrollbar,
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.weather-sidebar::-webkit-scrollbar-track,
+.outfit-section::-webkit-scrollbar-track,
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.weather-sidebar::-webkit-scrollbar-thumb,
+.outfit-section::-webkit-scrollbar-thumb,
+.chat-messages::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 3px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .main-content {
+    grid-template-columns: 300px 1fr 340px;
+  }
+  
+  .outfit-section {
+    padding: 24px 32px;
+  }
+}
+
+@media (max-width: 992px) {
+  .main-content {
+    grid-template-columns: 1fr 340px;
+  }
+  
+  .weather-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .chat-sidebar {
+    display: none;
+  }
+  
+  .outfit-section {
+    padding: 20px;
+  }
+  
+  .outfit-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
