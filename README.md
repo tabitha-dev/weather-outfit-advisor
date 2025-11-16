@@ -1,446 +1,425 @@
-# Weather Outfit Advisor
+# Weather Outfit ADK - Multi-Agent System
 
-[![Deployment Status](https://img.shields.io/badge/deployment-production-success?style=flat-square&logo=googlecloud)](https://agentengine-689252953158.us-central1.run.app/)
-[![ADK Version](https://img.shields.io/badge/google--adk-v1.6.1+-blue?style=flat-square)](https://github.com/google/adk)
-[![Python](https://img.shields.io/badge/python-3.11-blue?style=flat-square&logo=python)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-Educational-orange?style=flat-square)](LICENSE)
+**Status**: ✅ **PRODUCTION READY** - All tests passing, ready for deployment
 
-> A Multi-Agent System Leveraging ADK, A2A Protocol, and Vertex AI Agent Engine
+A sophisticated weather-based clothing recommendation system built with Google's Agent Development Kit (ADK) for deployment to Google Cloud Agent Engine.
 
-An intelligent clothing recommendation system that combines real-time weather data with personalized style preferences to help you dress appropriately for any occasion.
+## 🎯 Overview
 
-🌐 **[Try it Live!](https://agentengine-689252953158.us-central1.run.app/)** - Deployed on Google Cloud Run
+This project implements a multi-agent AI system that provides personalized clothing recommendations based on:
+- Real-time weather conditions
+- User activities (work, sports, formal events, casual)
+- Personal style preferences (practical, fashion-forward, kid-friendly)
+- Comfort profiles (runs cold/hot)
+- Safety considerations (extreme weather warnings)
 
-<img width="2542" height="957" alt="image" src="https://github.com/user-attachments/assets/17cb469b-a866-403f-ac4e-b54eacd614a6" />
+## 🏗️ Architecture
 
+### Multi-Agent Design
 
-## Overview
+The system uses **5 specialized agents** that communicate via Agent-to-Agent (A2A) protocol:
 
-The Weather Outfit Advisor is a capstone project demonstrating advanced AI agent architecture through a practical, user-facing application. Built using Google's Agent Development Kit (ADK) and the Agent-to-Agent (A2A) Protocol, this system showcases how specialized AI agents can collaborate to solve complex, multi-faceted problems.
+1. **Coach Agent** (Main Orchestrator)
+   - User-facing interface
+   - Coordinates all other agents
+   - Combines responses into friendly answers
+
+2. **Weather Agent**
+   - Fetches real-time weather data
+   - Implements smart caching (30-minute TTL)
+   - Returns structured forecast data
+
+3. **Stylist Agent**
+   - Generates outfit recommendations
+   - Considers weather, activity, and preferences
+   - Provides layering and accessory advice
+
+4. **Activity Agent**
+   - Classifies user activities
+   - Determines formality and movement levels
+   - Provides context for outfit planning
+
+5. **Safety Agent**
+   - Monitors weather conditions
+   - Issues warnings for extreme weather
+   - Provides actionable safety advice
 
 ### Key Features
 
-- **Real-Time Weather Integration** - Fetches current conditions and forecasts with intelligent caching
-- **Personalized Recommendations** - Adapts to individual style preferences and comfort profiles
-- **Activity-Aware Suggestions** - Tailors outfit advice based on your planned activities
-- **Safety Monitoring** - Provides alerts for extreme weather conditions
-- **Multi-Agent Architecture** - Five specialized agents working together seamlessly
-- **Production-Ready Deployment** - Hosted on Google Cloud Run with Vertex AI Agent Engine
+✅ **Activity-Aware Outfits** - Recommends clothing based on your plans (hiking, meetings, dates)  
+✅ **Smart Caching** - Reduces API calls and improves response time  
+✅ **Safety Warnings** - Alerts for extreme heat, cold, wind, or storms  
+✅ **Persona Styles** - Practical, fashion-focused, or kid-friendly responses  
+✅ **Memory System** - Remembers your preferences across sessions  
 
-## Architecture
-
-### Multi-Agent System (A2A Protocol)
-
-The system runs as a **fully integrated ADK Multi-Agent System** with six independent microservices:
-
-| Service | Port | Agent | Responsibility |
-|---------|------|-------|----------------|
-| **Flask Frontend** | 5000 | - | User interface with Tailwind CSS, proxies to Coach Agent |
-| **Coach Agent** | 8000 | Gemini 2.0 Flash | Main orchestrator, user I/O, memory, A2A client |
-| **Weather Agent** | 8001 | Gemini 2.0 Flash | Weather data fetching, caching, A2A service |
-| **Stylist Agent** | 8002 | Gemini 2.0 Flash | Outfit generation (6-10 items), color-aware recommendations |
-| **Activity Agent** | 8003 | Gemini 2.0 Flash | Activity classification (work, sports, formal, casual) |
-| **Safety Agent** | 8004 | Gemini 2.0 Flash | Extreme weather monitoring and alerts |
-
-### Integration Architecture
-
-- **Frontend → Coach Agent**: `/api/chat` endpoint proxies to Coach Agent's `/run` endpoint
-- **Coach → Other Agents**: Orchestrates via A2A `RemoteA2aAgent` protocol
-- **Fallback Mode**: `USE_ADK_AGENTS=false` enables standalone mode without ADK
-- **Microservice Design**: Each agent scales independently for optimal performance
-
-### Design Principles
-
-- **Agent-to-Agent (A2A) Protocol** - Decoupled microservices architecture
-- **Least Privilege Security** - Each agent has restricted permissions
-- **Smart Caching** - 70% reduction in API calls through intelligent data reuse
-- **Context Engineering** - Persistent memory for personalized experiences
-- **Quality-First** - Built-in safety, monitoring, and evaluation metrics
-- **Performance Optimized** - 50% API call reduction through efficient data flow
-
-## Tech Stack
-
-- **AI Framework**: Google Agent Development Kit (ADK) v1.6.1+
-- **Language Models**: Gemini 2.0 Flash (Experimental)
-- **Communication**: Agent-to-Agent (A2A) Protocol with a2a-sdk v0.3.12
-- **Language**: Python 3.11
-- **Frontend**: Flask + Tailwind CSS (CDN)
-- **Icons**: Google Material Symbols
-- **Deployment**: Google Cloud Run + Vertex AI Agent Engine
-- **Weather API**: Meteostat via RapidAPI
-- **Geocoding**: Open-Meteo API
-- **Session Management**: Vertex AI Agent Engine Sessions
-- **Monitoring**: Google Cloud Monitoring, OpenTelemetry, Cloud Trace, Cloud Logging
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-weather-outfit-advisor/
-├── agents/
-│   ├── coach_agent.py       # Main orchestrator
-│   ├── weather_agent.py     # Weather data specialist
-│   ├── stylist_agent.py     # Outfit recommendation engine
-│   ├── activity_agent.py    # Activity classifier
-│   └── safety_agent.py      # Safety monitoring
-├── tools/
-│   ├── weather_tools.py     # Weather API integration
-│   ├── memory_tools.py      # User preferences management
-│   └── outfit_tools.py      # Styling logic
-├── presentation.html        # 74-page capstone documentation
-└── README.md
+weather_outfit_adk/
+├── agents/              # Agent definitions
+│   ├── coach.py        # Main orchestrator agent
+│   ├── weather.py      # Weather data specialist
+│   ├── stylist.py      # Clothing advisor
+│   ├── activity.py     # Activity classifier
+│   └── safety.py       # Safety monitor
+├── tools/              # Agent tools (functions)
+│   ├── weather_tools.py    # Weather API & caching
+│   ├── outfit_tools.py     # Outfit planning logic
+│   ├── activity_tools.py   # Activity classification
+│   └── safety_tools.py     # Safety checking
+├── schemas/            # Data models (Pydantic)
+│   ├── weather.py      # Weather data structures
+│   ├── outfit.py       # Outfit & activity models
+│   └── memory.py       # User preferences
+├── memory/             # User preference storage
+│   └── user_memory.py  # Memory management
+└── config/             # Configuration
+    └── settings.py     # App settings
+
+app.py                  # Main ADK application entry point
 ```
 
-## Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.9+
-- Google Cloud Project with ADK enabled
-- Vertex AI API access
-- Weather API credentials
+- Python 3.9-3.13
+- Google Cloud Project with Vertex AI enabled
+- Weather API key (OpenWeatherMap or similar)
 
 ### Installation
 
+1. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Set up environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your API keys
+   ```
+
+3. **Run locally:**
+   ```bash
+   python app.py
+   ```
+
+## 🌐 Deployment to Google Cloud
+
+### Option 1: Single-Service Deployment (Monolithic)
+
+**Deploy all agents together** - Simplest option for getting started:
+
 ```bash
-# Clone the repository
-git clone https://github.com/tabitha-dev/weather-outfit-advisor.git
-cd weather-outfit-advisor
+# Install ADK with Agent Engine support
+pip install google-cloud-aiplatform[adk,agent_engines]>=1.111
 
-# Install dependencies
-pip install google-adk[a2a]>=1.6.1
-pip install -r requirements.txt
+# Authenticate with Google Cloud
+gcloud auth login
+gcloud config set project YOUR_PROJECT_ID
 
-# Set up environment variables
-export GOOGLE_CLOUD_PROJECT="your-project-id"
-export WEATHER_API_KEY="your-rapidapi-key"
-export USE_ADK_AGENTS="true"  # Set to false for standalone mode
+# Deploy to Agent Engine
+adk deploy agent-engine \
+  --project=YOUR_PROJECT_ID \
+  --location=us-central1 \
+  --bucket=YOUR_GCS_BUCKET
+```
+
+### Option 2: A2A Multi-Service Deployment (Recommended for Production)
+
+**Deploy each agent independently** for true microservices architecture with independent scaling:
+
+```bash
+# See deploy/a2a/README.md for complete instructions
+cd deploy/a2a
+
+# Option A: Docker Compose (local testing)
+docker-compose up
+
+# Option B: Google Cloud Run (production)
+# Deploy each service separately - see deploy/a2a/README.md
+
+# Option C: Kubernetes/GKE
+kubectl apply -f deploy/a2a/k8s/
+```
+
+**Benefits of A2A deployment:**
+- ✅ Independent scaling per agent
+- ✅ Fault isolation (one agent failure doesn't crash system)
+- ✅ Technology flexibility (different models per agent)
+- ✅ Team independence (deploy agents separately)
+
+See [`deploy/a2a/README.md`](deploy/a2a/README.md) for detailed A2A deployment guide.
+
+### Option 3: Cloud Run (Simple Container Deployment)
+
+```bash
+# Deploy as single containerized service
+adk deploy cloud_run \
+  --region us-central1 \
+  --project YOUR_PROJECT_ID \
+  --with_ui
+```
+
+### Required Environment Variables for Production
+
+Set these in Google Cloud Secret Manager:
+
+- `WEATHER_API_KEY` - Your weather API key
+- `GOOGLE_CLOUD_PROJECT` - Your GCP project ID
+- `GOOGLE_CLOUD_LOCATION` - Deployment region (e.g., us-central1)
+
+## 💬 Example Interactions
+
+**Basic query:**
+```
+User: What should I wear today in Seattle?
+Agent: It's 58°F and cloudy in Seattle. I recommend jeans, a long-sleeve shirt, 
+       and a light jacket. There's a 40% chance of rain, so bring an umbrella!
+```
+
+**Activity-aware:**
+```
+User: I'm going hiking this afternoon in Redmond
+Agent: Perfect hiking weather at 62°F! Wear athletic leggings, a moisture-wicking 
+       shirt, and layers you can remove. Bring a light jacket and windproof cap 
+       since winds are 18 mph. Don't forget trail shoes!
+```
+
+**With safety warning:**
+```
+User: What should I wear for my morning run?
+Agent: ⚠️ Extreme cold warning at 18°F! Wear thermal layers, a heavy winter coat, 
+       warm hat, scarf, and gloves. Protect your ears and hands, and consider 
+       limiting outdoor exposure. Maybe hit the treadmill today?
+```
+
+## 🔧 Configuration Options
+
+### User Preferences
+
+Users can set preferences that persist across sessions:
+
+- **Persona**: `practical`, `fashion`, `kid_friendly`
+- **Comfort Profile**: `runs_cold`, `neutral`, `runs_hot`
+- **Default City**: Automatically use preferred location
+
+### Customization
+
+Edit `weather_outfit_adk/config/settings.py` to modify:
+- Default model (currently `gemini-2.0-flash-exp`)
+- Cache duration
+- Temperature thresholds
+- Safety warning levels
+
+## 🖥️ Frontend Interface
+
+**Beautiful, modern chat UI** for interacting with the Weather Outfit Assistant:
+
+- **Real-time Chat** - Interactive conversation with Coach agent
+- **Quick Prompts** - Pre-filled example questions
+- **Responsive Design** - Works on desktop, tablet, and mobile
+- **Error Handling** - Graceful error messages
+- **Session Management** - Maintains conversation context
+
+### Quick Start
+
+```bash
+# Run frontend server
+python frontend/app.py
+# Open http://localhost:5000
+```
+
+**Complete guide**: See [`frontend/README.md`](frontend/README.md)
+
+## 📊 Observability & Monitoring
+
+**Full observability suite integrated** with Google Cloud Monitoring:
+
+### Three Pillars of Observability
+
+- **Metrics** - Performance and usage tracking (Google Cloud Monitoring)
+  - Agent call latency, error rates, throughput
+  - Tool execution time
+  - HTTP request metrics
+
+- **Traces** - Distributed tracing (OpenTelemetry + Cloud Trace)
+  - End-to-end request flow across agents
+  - Agent-to-agent communication timeline
+  - Bottleneck identification
+
+- **Logs** - Structured logging (Google Cloud Logging)
+  - JSON-formatted logs with context
+  - Service-level log aggregation
+  - Error tracking and debugging
+
+### Features
+
+✅ **Pre-configured dashboards** - Agent metrics visualization  
+✅ **Custom metrics** - Track business and performance KPIs  
+✅ **Distributed tracing** - See complete request flow  
+✅ **Structured logging** - JSON logs with full context  
+✅ **Alert policies** - Proactive issue detection  
+
+### Quick Start
+
+```python
+from weather_outfit_adk.monitoring import setup_logging, setup_tracing, agent_metrics
+
+# Setup monitoring
+logger = setup_logging("my-service", enable_cloud_logging=True)
+tracer = setup_tracing("my-service")
+
+# Track metrics
+with agent_metrics.measure_time("operation_name"):
+    result = do_something()
+```
+
+**Complete guide**: See [`MONITORING.md`](MONITORING.md) for setup and usage
+
+### 🔔 Alert Policies
+
+**Automated alerting** for proactive incident response:
+
+✅ **High Error Rate** - Alerts when error rate > 5/min (auto-converted to 0.083/sec)  
+✅ **High Latency** - Alerts when P95 latency > 2000ms  
+✅ **Low Success Rate** - Alerts when success rate < 10/min (auto-converted to 0.167/sec)  
+
+```python
+from weather_outfit_adk.monitoring.alerts import AlertPolicyManager
+
+# Create all alert policies (rate-based)
+manager = AlertPolicyManager(notification_channels=["CHANNEL_ID"])
+alerts = manager.create_all_alerts()
+```
+
+**Note**: Default alerts track throughput rates using ALIGN_RATE. Thresholds are specified in per-minute units (e.g., 5 errors/min) and automatically converted to per-second for Google Cloud Monitoring (e.g., 0.083 errors/sec). For percentage-based alerts (error %, availability %), see [`ALERTS.md`](ALERTS.md).
+
+**Complete guide**: See [`ALERTS.md`](ALERTS.md) for alert configuration
+
+## 🧪 Testing
+
+### Automated Test Suite
+
+**Verify ADK Installation**
+```bash
+# Test ADK package and Agent class imports
+python test_adk_imports.py
+```
+
+Expected output:
+```
+✅ Agent class imported from google.adk
+✅ Runner class imported from google.adk
+✅ App class imported from google.adk.apps
+✅ Created test agent successfully
+✅ Created test app successfully
+✅ ALL ADK IMPORT TESTS PASSED!
+```
+
+**Comprehensive System Tests**
+```bash
+# Run full system test suite
+python test_full_system.py
+```
+
+Expected output:
+```
+✅ All 5 agents operational
+✅ All tools functioning
+✅ Memory system integrated
+✅ Schemas validated
+✅ Main app ready
+✅ ALL TESTS PASSED!
 ```
 
 ### Local Development
 
 ```bash
-# Start all services with Docker Compose
-docker-compose up
+# Run the ADK app locally
+python app.py
 
-# Or start services individually:
-# Frontend (port 5000)
-python frontend/app.py
-
-# Coach Agent (port 8000)
-python agents/coach_agent.py
-
-# Weather Agent (port 8001)
-python agents/weather_agent.py
-
-# Stylist Agent (port 8002)
-python agents/stylist_agent.py
-
-# Activity Agent (port 8003)
-python agents/activity_agent.py
-
-# Safety Agent (port 8004)
-python agents/safety_agent.py
+# The app will use mock weather data if WEATHER_API_KEY is not set
 ```
 
-### Usage
+### Example Test Queries
 
-```python
-# Initialize the Coach Agent
-from agents.coach_agent import coach_agent
+1. "What should I wear in Boston?" (Basic query)
+2. "I have a business meeting at 3pm in New York" (Activity + time)
+3. "Going biking this evening in Portland" (Sports activity)
+4. "What should my kid wear to school in Chicago?" (Persona switch)
 
-# Start a conversation
-response = coach_agent.run("What should I wear for a morning jog today?")
-print(response)
-```
+## 🔒 Security & Privacy
 
-### Integration Status
+- API keys managed via environment variables or Secret Manager
+- User preferences stored with unique user IDs
+- No PII logged in traces
+- Weather data cached locally (not shared between users)
 
-✅ **Fully Operational**
-- ADK multi-agent backend is production-ready
-- A2A protocol services deployed and running
-- Flask frontend integrated with Coach Agent via A2A
-- Frontend proxies `/api/chat` to Coach Agent at `http://localhost:8000/run`
-- Fallback mode implemented for standalone operation
-- All dependencies installed: `google-adk[a2a]>=1.6.1` with `a2a-sdk v0.3.12`
+## 📚 Architecture Principles
 
-## API Documentation
+This project follows Google's Agent Design patterns:
 
-### Frontend Endpoints
+- **Model as Brain**: Gemini 2.0 Flash for reasoning
+- **Tools as Hands**: Python functions for weather, outfit logic
+- **Orchestration as Nervous System**: ADK agent framework
+- **Runtime as Body**: Agent Engine for production deployment
 
-#### `POST /api/chat`
-Main chat endpoint that proxies requests to the Coach Agent.
+### A2A Communication
 
-**Request:**
-```json
-{
-  "message": "What should I wear for a morning run?",
-  "location": "Seattle, WA",
-  "preferences": {
-    "style": "Sporty",
-    "colors": ["Blues", "Neutral"]
-  }
-}
-```
+Agents use Agent-to-Agent protocol for:
+- Independent deployment and scaling
+- Clean separation of concerns
+- Separate session histories per agent
 
-**Response:**
-```json
-{
-  "response": "Based on the current weather...",
-  "outfit": {
-    "items": ["Running shoes", "Athletic shorts", "Moisture-wicking shirt"],
-    "accessories": ["Cap", "Sunglasses"]
-  },
-  "weather": {
-    "temperature": 55,
-    "conditions": "Partly cloudy",
-    "precipitation": 10
-  }
-}
-```
+## ✅ Production Readiness
 
-### Agent Service Endpoints
+**All Systems Verified**
+- ✅ Multi-agent architecture implemented (5 specialized agents)
+- ✅ All tools and schemas validated
+- ✅ Memory system integrated into Coach agent
+- ✅ ADK patterns verified (correct imports, function tools)
+- ✅ Comprehensive test suite passing (100%)
+- ✅ Architect review approved
+- ✅ Ready for Google Cloud Agent Engine deployment
 
-| Service | Port | Endpoint | Description |
-|---------|------|----------|-------------|
-| Coach Agent | 8000 | `/run` | Main orchestration endpoint |
-| Weather Agent | 8001 | `/run` | Weather data fetching |
-| Stylist Agent | 8002 | `/run` | Outfit generation |
-| Activity Agent | 8003 | `/run` | Activity classification |
-| Safety Agent | 8004 | `/run` | Safety monitoring |
+**Test Coverage**
+- ADK package import tests
+- Agent creation tests
+- Tool function tests
+- Schema validation tests
+- Memory system tests
+- End-to-end integration tests
 
-## Performance Metrics
+## 🛣️ Future Enhancements
 
-### Response Time Optimization
-- **Cache Hit**: 125ms average response time
-- **Cache Miss**: 800ms+ average response time
-- **Improvement**: 84% faster with caching
+Optional features for future iterations:
+- [ ] Multi-day forecast planning
+- [ ] Packing recommendations for trips
+- [ ] Integration with calendar events
+- [ ] Weather alert subscriptions
+- [ ] Historical outfit tracking
+- [ ] Frontend web interface
+- [ ] Mobile app integration
 
-### API Call Reduction
-- **Weather API Calls**: 70% reduction through smart caching
-- **Overall API Optimization**: 50% reduction in external calls
-- **Cache TTL**: 15 minutes for weather data
+## 📖 Documentation
 
-### System Performance
-- **Agent Communication**: <50ms average A2A protocol latency
-- **Outfit Generation**: ~200ms for complete recommendation
-- **End-to-End Response**: <1s for typical queries
+- [Google ADK Documentation](https://google.github.io/adk-docs/)
+- [Agent Engine Guide](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-development-kit/quickstart)
+- [A2A Protocol](https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/)
 
-## Features in Detail
+## 📄 License
 
-### Comprehensive Outfit Generation
-- **Context-Aware**: Considers weather, activity, and user preferences
-- **Smart Item Capping**: 6-9 items for weather-only, exactly 10 for weather + activity
-- **Color Intelligence**: Recommends coordinated color palettes
-- **Dynamic Visualization**: SVG icons for each clothing item
-- **User Feedback**: Rating system for continuous improvement
+This project is provided as-is for educational and demonstration purposes.
 
-### Smart Weather Caching
-The Weather Agent implements an in-memory cache with a 15-minute TTL, reducing external API calls by approximately 70% and dramatically improving response times (125ms vs 800ms+).
+## 🙋 Support
 
-### Personalization Engine
-Users can customize their experience with:
-- **Style Preferences**: Casual, Minimalist, Formal, Sporty
-- **Clothing Types**: Preferred garments and restrictions
-- **Color Palettes**: Neutral, Blues, Earth Tones
-- **Comfort Profile**: Temperature sensitivity and layering preferences
-- **Persistent Storage**: Preferences saved via localStorage
-
-### Location & Weather-Aware Quick Actions
-- **Dynamic Suggestions**: UI buttons adapt based on location and weather
-- **Contextual Activities**: Relevant suggestions (hiking in Seattle, beach in Miami)
-- **Favorites System**: Save frequently searched locations
-- **Real-Time Updates**: Live weather data integration
-
-### Modern UI/UX Design
-- **3-Column Layout**: Weather/preferences sidebar, outfit center, chat sidebar
-- **Responsive Design**: Built with Tailwind CSS for all screen sizes
-- **Material Symbols**: Google Material Symbols iconography throughout
-- **Interactive Chat**: Preference-aware responses with quick action buttons
-- **Smart Keyword Detection**: Context-sensitive conversation flow
-
-### Safety Guardrails
-The Safety Agent monitors for:
-- Extreme cold (<20°F)
-- Extreme heat (>95°F)
-- Strong winds (>25 mph)
-- Heavy precipitation (>70% chance)
-- Freezing conditions
-
-## Production Deployment
-
-The application is **live and fully operational** on Google Cloud infrastructure:
-
-🚀 **Live Application**: [https://agentengine-689252953158.us-central1.run.app/](https://agentengine-689252953158.us-central1.run.app/)
-
-Deployed with:
-- **Platform**: Google Cloud Run
-- **AI Engine**: Vertex AI Agent Engine
-- **Scalability**: Auto-scaling based on demand
-- **Reliability**: 99.9% uptime SLA
-- **Security**: IAM-based access control
-- **Observability**: Comprehensive logging and monitoring
-
-### Try It Now
-Visit the live application to:
-- Get personalized outfit recommendations
-- See real-time weather integration in action
-- Experience the multi-agent system responding to your queries
-- Save your style preferences for future suggestions
-
-### Recent Updates (November 2025)
-- ✅ **PRODUCTION READY** - System approved for deployment
-- ✅ Fixed critical weather API bug (now uses current date)
-- ✅ Comprehensive environment variable documentation
-- ✅ Production observability with Cloud Logging/Monitoring/Trace
-- ✅ All 6 services tested end-to-end successfully
-- ✅ Mock data fallback verified working
-- ✅ 50% API call reduction through optimizations
-
-## Documentation
-
-The full capstone documentation is available in multiple formats:
-
-### Interactive HTML Presentation
-Open `presentation.html` in any browser for the complete 74-page presentation with:
-- Day 1: Introduction to Agents
-- Day 2: Agent Tools & Interoperability
-- Day 3: Context Engineering
-- Day 4: Agent Quality
-- Day 5: Prototype to Production
-- Technical Implementation Details
-- Results & Conclusions
-
-### Print-Ready PDF
-The complete presentation is also available as a professionally formatted PDF document (`The Weather Outfit Advisor_ Capstone Project Report.pdf`), optimized for printing in A4 portrait format with:
-- Table of Contents with page references
-- 74 pages of comprehensive technical documentation
-- APA-formatted references
-- Google-themed design throughout
-- Print-friendly footer layout on every page
-
-## Troubleshooting
-
-### Common Issues
-
-**Q: Services not starting on specified ports**
-```bash
-# Check if ports are already in use
-lsof -i :8000  # Replace with your port
-
-# Kill process using the port
-kill -9 <PID>
-```
-
-**Q: Weather API returning no data**
-```bash
-# Verify API key is set
-echo $WEATHER_API_KEY
-
-# Check fallback mode is working
-export USE_ADK_AGENTS=false
-```
-
-**Q: Agent communication errors**
-```bash
-# Verify all agents are running
-curl http://localhost:8000/health
-curl http://localhost:8001/health
-# ... repeat for other agents
-
-# Check A2A SDK installation
-pip show a2a-sdk
-```
-
-**Q: Frontend not connecting to Coach Agent**
-- Ensure Coach Agent is running on port 8000
-- Check that `/api/chat` endpoint is properly configured in Flask
-- Verify CORS settings if accessing from different domain
-
-### Debug Mode
-
-Enable verbose logging:
-```bash
-export LOG_LEVEL=DEBUG
-export ENABLE_TRACE=true
-```
-
-## Future Enhancements
-
-### Planned Features
-- [ ] **Wardrobe Management**: Track owned clothing items for personalized suggestions
-- [ ] **Multi-Day Planning**: Week-ahead outfit planning with weather forecasts
-- [ ] **Social Integration**: Share outfit recommendations with friends
-- [ ] **Image Recognition**: Upload photos of clothes for virtual wardrobe
-- [ ] **Calendar Integration**: Automatic activity detection from calendar events
-- [ ] **Outfit History**: Track and rate past recommendations
-- [ ] **Regional Customization**: Cultural and regional clothing preferences
-- [ ] **Sustainability Scoring**: Rate outfits based on environmental impact
-
-### Known Limitations
-- Weather data limited to Meteostat API coverage areas
-- Cache TTL fixed at 15 minutes (not user-configurable)
-- Requires internet connection for real-time weather data
-- Color palette limited to predefined options
-
-## Learning Outcomes
-
-This project demonstrates mastery of:
-- Multi-agent system design and orchestration
-- A2A Protocol implementation
-- Production-grade AI deployment
-- Context engineering and memory management
-- Safety and quality assurance in AI systems
-- MLOps best practices (caching, monitoring, evaluation)
-- Full-stack development with AI integration
-- Microservices architecture and Docker containerization
-
-## Acknowledgments
-
-This project was built as part of the **Kaggle "5 Days of AI - Agents" course** (November 2025), which provided comprehensive training in modern AI agent development.
-
-### Special Thanks To:
-- **Kaggle Team**: For the exceptional course materials and hands-on learning experience
-- **Google ADK Team**: For developing the Agent Development Kit and comprehensive documentation
-- **Course Instructors**:
-  - Antonio Gulli, Sujith Ravi, Antonio Sanchez, and the entire Kaggle AI team
-  - Authors of the five foundational whitepapers that guided this implementation
-
-### Technologies & Frameworks:
-- **Google Agent Development Kit (ADK)** - Core agent framework
-- **Gemini 2.0 Flash** - Powering all AI agents
-- **Vertex AI** - Production deployment infrastructure
-- **Meteostat API** - Real-time weather data
-- **Open-Meteo** - Geocoding services
-- **Tailwind CSS** - Modern UI framework
-
-## References
-
-Built using insights from the Kaggle "5 Days of AI - Agents" course:
-- Blount, A., Gulli, A., Saboo, S., Zimmermann, M., & Vuskovic, V. (2025, November). *Introduction to agents* [Whitepaper]. Kaggle.
-- Styer, M., Patlolla, K., Mohan, M., & Diaz, S. (2025, November). *Agent tools and interoperability with MCP* [Whitepaper]. Kaggle.
-- Milam, K., & Gulli, A. (2025, November). *Context engineering sessions and memory* [Whitepaper]. Kaggle.
-- Subasioglu, M., Bulmus, T., & Bakkali, W. (2025, November). *Agent quality* [Whitepaper]. Kaggle.
-- Kartakis, S., Hernandez Larios, G., Li, R., Secchi, E., & Xia, H. (2025, November). *Prototype to production* [Whitepaper]. Kaggle.
-
-## Contributing
-
-This is a capstone project for educational purposes. However, if you'd like to:
-- Report bugs or issues
-- Suggest new features
-- Improve documentation
-
-Please feel free to open an issue or reach out via GitHub or LinkedIn!
-
-## Author
-
-**Tabitha Khadse**
-- GitHub: [@tabitha-dev](https://github.com/tabitha-dev)
-- LinkedIn: [tabitha-dev](https://www.linkedin.com/in/tabitha-dev/)
-
-## License
-
-This project is part of a capstone demonstration for educational purposes.
+For issues or questions:
+1. Check Google Cloud Agent Engine documentation
+2. Review ADK GitHub issues
+3. Consult Vertex AI support
 
 ---
 
-Built with Google Agent Development Kit | Powered by Gemini 2.0 Flash
+Built with ❤️ using Google Agent Development Kit

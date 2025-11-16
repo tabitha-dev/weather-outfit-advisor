@@ -1,0 +1,18 @@
+google-adk[a2a]>=1.6.1
+google-cloud-aiplatform[adk,agent_engines]>=1.111
+requests>=2.31.0
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+
+# Web Framework
+flask>=3.0.0
+flask-cors>=4.0.0
+gunicorn>=21.0.0
+
+# Monitoring and Observability
+google-cloud-monitoring>=2.15.0
+google-cloud-logging>=3.5.0
+opentelemetry-api>=1.20.0
+opentelemetry-sdk>=1.20.0
+opentelemetry-exporter-gcp-trace>=1.6.0
+sift-stack-py
