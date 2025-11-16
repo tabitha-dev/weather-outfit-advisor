@@ -1,0 +1,46 @@
+/home/runner/workspace/deploy/a2a/coach_service/app.py:33: UserWarning: [EXPERIMENTAL] RemoteA2aAgent: ADK Implementation for A2A support (A2aAgentExecutor, RemoteA2aAgent and corresponding supporting components etc.) is in experimental mode and is subjected to breaking changes. A2A protocol and SDK arethemselves not experimental. Once it's stable enough the experimental mode will be removed. Your feedback is welcome.
+  remote_weather = RemoteA2aAgent(
+/home/runner/workspace/deploy/a2a/coach_service/app.py:39: UserWarning: [EXPERIMENTAL] RemoteA2aAgent: ADK Implementation for A2A support (A2aAgentExecutor, RemoteA2aAgent and corresponding supporting components etc.) is in experimental mode and is subjected to breaking changes. A2A protocol and SDK arethemselves not experimental. Once it's stable enough the experimental mode will be removed. Your feedback is welcome.
+  remote_stylist = RemoteA2aAgent(
+/home/runner/workspace/deploy/a2a/coach_service/app.py:45: UserWarning: [EXPERIMENTAL] RemoteA2aAgent: ADK Implementation for A2A support (A2aAgentExecutor, RemoteA2aAgent and corresponding supporting components etc.) is in experimental mode and is subjected to breaking changes. A2A protocol and SDK arethemselves not experimental. Once it's stable enough the experimental mode will be removed. Your feedback is welcome.
+  remote_activity = RemoteA2aAgent(
+/home/runner/workspace/deploy/a2a/coach_service/app.py:51: UserWarning: [EXPERIMENTAL] RemoteA2aAgent: ADK Implementation for A2A support (A2aAgentExecutor, RemoteA2aAgent and corresponding supporting components etc.) is in experimental mode and is subjected to breaking changes. A2A protocol and SDK arethemselves not experimental. Once it's stable enough the experimental mode will be removed. Your feedback is welcome.
+  remote_safety = RemoteA2aAgent(
+/home/runner/workspace/deploy/a2a/coach_service/app.py:112: UserWarning: [EXPERIMENTAL] to_a2a: ADK Implementation for A2A support (A2aAgentExecutor, RemoteA2aAgent and corresponding supporting components etc.) is in experimental mode and is subjected to breaking changes. A2A protocol and SDK arethemselves not experimental. Once it's stable enough the experimental mode will be removed. Your feedback is welcome.
+  app = to_a2a(coach_agent_a2a)
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/google/adk/a2a/utils/agent_to_a2a.py:137: UserWarning: [EXPERIMENTAL] A2aAgentExecutor: ADK Implementation for A2A support (A2aAgentExecutor, RemoteA2aAgent and corresponding supporting components etc.) is in experimental mode and is subjected to breaking changes. A2A protocol and SDK arethemselves not experimental. Once it's stable enough the experimental mode will be removed. Your feedback is welcome.
+  agent_executor = A2aAgentExecutor(
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/google/adk/a2a/executor/a2a_agent_executor.py:101: UserWarning: [EXPERIMENTAL] A2aAgentExecutorConfig: ADK Implementation for A2A support (A2aAgentExecutor, RemoteA2aAgent and corresponding supporting components etc.) is in experimental mode and is subjected to breaking changes. A2A protocol and SDK arethemselves not experimental. Once it's stable enough the experimental mode will be removed. Your feedback is welcome.
+  self._config = config or A2aAgentExecutorConfig()
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/google/adk/a2a/utils/agent_to_a2a.py:149: UserWarning: [EXPERIMENTAL] AgentCardBuilder: ADK Implementation for A2A support (A2aAgentExecutor, RemoteA2aAgent and corresponding supporting components etc.) is in experimental mode and is subjected to breaking changes. A2A protocol and SDK arethemselves not experimental. Once it's stable enough the experimental mode will be removed. Your feedback is welcome.
+  card_builder = AgentCardBuilder(
+============================================================
+Coach Agent A2A Service (Orchestrator)
+============================================================
+Agent: coach_agent
+Model: gemini-2.0-flash-exp
+Local Tools: 2
+Remote Agents: 4
+
+Remote Agent Connections:
+  - Weather: http://localhost:8001
+  - Stylist: http://localhost:8002
+  - Activity: http://localhost:8003
+  - Safety: http://localhost:8004
+
+Port: 8000
+Agent Card: http://localhost:8000/.well-known/agent.json
+============================================================
+
+⚠️  Make sure all remote services are running before starting!
+============================================================
+INFO:     Started server process [30049]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-11-14 04:30:40,511 - WARNING - jsonrpc_app.py:556 - Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+INFO:     127.0.0.1:55242 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
+INFO:     172.31.104.162:36896 - "GET / HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:55896 - "GET / HTTP/1.1" 405 Method Not Allowed
+2025-11-14 04:33:45,288 - WARNING - jsonrpc_app.py:556 - Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+INFO:     127.0.0.1:41144 - "GET /.well-known/agent.json HTTP/1.1" 200 OK
