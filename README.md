@@ -1,4 +1,7 @@
 # Weather Outfit ADK - Multi-Agent System
+<img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGtqaHRwZ2ZxYTB4NmNtaWFxY3JtNDQ3a2prczFpbndhaXVrN3p5cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IQp947luDDrTK9QLv7/giphy.gif" width="600" />
+
+
 
 **Status**: ✅ **PRODUCTION READY** - All tests passing, ready for deployment
 
